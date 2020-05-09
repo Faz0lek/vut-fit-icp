@@ -1,8 +1,8 @@
 #ifndef ROUTE_H
 #define ROUTE_H
 
-#include <vector>
-#include <string>
+#include <QVector>
+#include <QString>
 
 class Route
 {
@@ -10,7 +10,7 @@ public:
     Route();
 
 private:
-    std::vector<std::string> streets;
+    QVector<QString> streets;
 };
 
 #endif // ROUTE_H
