@@ -5,6 +5,7 @@
 #include "street.h"
 #include <QVector>
 #include <QTimer>
+#include <QTime>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,7 +28,7 @@ private:
     Ui::MainWindow *ui;
     QVector<Street> map;
     QTimer* clock;
-    QString time;
+    QTime time;
 
     void initScene();
     void drawMap(const QVector<Street>& map);
