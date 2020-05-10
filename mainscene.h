@@ -2,6 +2,8 @@
 #define MAINSCENE_H
 
 #include <QGraphicsScene>
+#include "street.h"
+#include <QVector>
 
 class MainScene : public QGraphicsScene
 {
@@ -10,7 +12,6 @@ public:
     explicit MainScene(QObject *parent = nullptr);
 
 signals:
-
 };
 
 #endif // MAINSCENE_H

@@ -21,7 +21,7 @@ FileParser::FileParser()
  * @param streetfilename Name of file to be parsed.
  * @return QVector<Street> Vector of streets.
  */
-QVector<Street> ParseStreet(const QString streetfilename)
+QVector<Street> FileParser::ParseStreet(const QString streetfilename)
 {
     QVector<Street> vector;
 
@@ -81,7 +81,7 @@ QVector<Street> ParseStreet(const QString streetfilename)
     return vector;
 }
 
-QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString routefilename, const QString linefilename)
+QMap<int, QVector<Route>> FileParser::ParseRoute(const QString stopfilename, const QString routefilename, const QString linefilename)
 {
     QMap<int, QVector<Route>> lines;
 

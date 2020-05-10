@@ -7,3 +7,13 @@ Street::Street(QString street_name, int x1, int y1, int x2, int y2)
 }
 
 Street::Street(){}
+
+QPoint Street::getBeginning()
+{
+    return this->coordinates.first;
+}
+
+QPoint Street::getEnd()
+{
+    return this->coordinates.second;
+}
