@@ -16,19 +16,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    fileparser.cpp \
     main.cpp \
     mainscene.cpp \
     mainwindow.cpp \
     route.cpp \
     street.cpp \
-    vehicle.cpp
+    vehicle.cpp \
+    stop.cpp
 
 HEADERS += \
+    fileparser.h \
     mainscene.h \
     mainwindow.h \
     route.h \
     street.h \
-    vehicle.h
+    vehicle.h \
+    stop.h
 
 FORMS += \
     mainwindow.ui
@@ -37,3 +41,9 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    linesfile.csv \
+    routesfile.csv \
+    stopsfile.csv \
+    streetsfile.csv
