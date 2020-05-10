@@ -16,13 +16,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    this->setStyleSheet("background-color: rgb(75, 75, 75);");
     FileParser parser;
 
     QVector<Street> map = parser.ParseStreet(MAP_FILENAME);
 
-    initScene();
-    drawMap(map);
+    this->initScene();
+    this->drawMap(map);
 }
 
 MainWindow::~MainWindow()
