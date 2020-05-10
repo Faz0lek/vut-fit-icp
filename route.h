@@ -9,11 +9,11 @@
 class Route
 {
 public:
-//    Route();
+    Route(QVector<QPair<Stop, int>> route);
     Route();
 
 private:
-    QVector<QPair<Stop, int>> stops;
+    QVector<QPair<Stop, int>> route;
 };
 
 #endif // ROUTE_H

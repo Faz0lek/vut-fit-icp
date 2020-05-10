@@ -6,7 +6,7 @@
 class Stop
 {
 public:
-    Stop(QString streetname, int dist);
+    Stop(QString streetname, int distance);
     Stop();
 private:
     QString street_name;

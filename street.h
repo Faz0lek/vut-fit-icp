@@ -9,7 +9,7 @@
 class Street
 {
 public:
-    Street(QString streetname, int x1, int y1, int x2, int y2);
+    Street(QString street_name, int x1, int y1, int x2, int y2);
     Street();
 private:
     QString street_name;
