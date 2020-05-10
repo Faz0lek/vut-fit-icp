@@ -4,13 +4,12 @@
 #include <iostream>
 #include <QFile>
 #include <QTextStream>
-#include "street.h"
-#include "route.h"
 #include <QVector>
 #include <QString>
 #include <QStringList>
 #include <QMap>
-
+#include "street.h"
+#include "route.h"
 
 class FileParser
 {
