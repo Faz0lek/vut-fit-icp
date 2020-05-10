@@ -18,17 +18,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     fileparser.cpp \
     main.cpp \
+    mainscene.cpp \
     mainwindow.cpp \
     route.cpp \
-    stop.cpp \
-    street.cpp
+    street.cpp \
+    vehicle.cpp \
+    stop.cpp
 
 HEADERS += \
     fileparser.h \
+    mainscene.h \
     mainwindow.h \
     route.h \
-    stop.h \
-    street.h
+    street.h \
+    vehicle.h \
+    stop.h
 
 FORMS += \
     mainwindow.ui
