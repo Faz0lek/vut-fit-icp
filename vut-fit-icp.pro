@@ -17,15 +17,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     fileparser.cpp \
+    line.cpp \
     main.cpp \
     mainwindow.cpp \
     route.cpp \
+    stop.cpp \
     street.cpp
 
 HEADERS += \
     fileparser.h \
+    line.h \
     mainwindow.h \
     route.h \
+    stop.h \
     street.h
 
 FORMS += \
@@ -37,5 +41,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    routefile.csv \
-    streetfile.csv
+    linesfile.csv \
+    routesfile.csv \
+    stopsfile.csv \
+    streetsfile.csv
