@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "street.h"
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,8 +17,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_openMapButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+    QVector<Street> map;
 
     void initScene();
     void drawMap(const QVector<Street>& map);

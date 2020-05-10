@@ -8,6 +8,8 @@
 #include <QVector>
 #include <QString>
 #include <QGraphicsLineItem>
+#include <QDebug>
+#include <QFileDialog>
 
 const QString MAP_FILENAME = R"(D:\Projects\ICP\vut-fit-icp\streetsfile.csv)";
 
@@ -17,12 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setStyleSheet("background-color: rgb(75, 75, 75);");
-    FileParser parser;
-
-    QVector<Street> map = parser.ParseStreet(MAP_FILENAME);
 
     this->initScene();
-    this->drawMap(map);
 }
 
 MainWindow::~MainWindow()
@@ -44,4 +42,14 @@ void MainWindow::drawMap(const QVector<Street>& map)
         auto line = ui->graphicsView->scene()->addLine(s.getBeginning().x(), s.getBeginning().y(), s.getEnd().x(), s.getEnd().y());
         line->setPen(QPen({Qt::blue}, 5));
     }
+}
+
+void MainWindow::on_openMapButton_clicked()
+{
+    FileParser p;
+
+    QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
+
+    this->map = p.ParseStreet(fileName);
+    this->drawMap(this->map);
 }
