@@ -33,6 +33,8 @@ void MainWindow::initScene()
     auto* scene = new MainScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+    ui->graphicsView->setStyleSheet("background-color: rgb(255, 255, 255);");
+    ui->openMapButton->setStyleSheet("background-color: rgb(255, 255, 255);");
 }
 
 void MainWindow::drawMap(const QVector<Street>& map)
@@ -49,6 +51,11 @@ void MainWindow::on_openMapButton_clicked()
     FileParser p;
 
     QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
+
+    if (fileName.isNull())
+    {
+        return;
+    }
 
     this->map = p.ParseStreet(fileName);
     this->drawMap(this->map);
