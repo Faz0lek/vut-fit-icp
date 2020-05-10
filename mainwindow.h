@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "street.h"
 #include <QVector>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,12 +20,14 @@ public:
 
 private slots:
     void on_openMapButton_clicked();
-
     void on_zoomSlider_valueChanged(int value);
+    void onClockTick();
 
 private:
     Ui::MainWindow *ui;
     QVector<Street> map;
+    QTimer* clock;
+    QString time;
 
     void initScene();
     void drawMap(const QVector<Street>& map);
