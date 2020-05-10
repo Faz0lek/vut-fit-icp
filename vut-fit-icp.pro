@@ -17,7 +17,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     fileparser.cpp \
-    line.cpp \
     main.cpp \
     mainwindow.cpp \
     route.cpp \
@@ -26,7 +25,6 @@ SOURCES += \
 
 HEADERS += \
     fileparser.h \
-    line.h \
     mainwindow.h \
     route.h \
     stop.h \
