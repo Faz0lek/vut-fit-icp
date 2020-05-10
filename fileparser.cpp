@@ -21,7 +21,7 @@ FileParser::FileParser()
  * @param streetfilename Name of file to be parsed.
  * @return QVector<Street> Vector of streets.
  */
-QVector<Street> ParseStreet(const QString streetfilename)
+QVector<Street> FileParser::ParseStreet(const QString streetfilename)
 {
     QVector<Street> vector;
 
@@ -81,7 +81,7 @@ QVector<Street> ParseStreet(const QString streetfilename)
     return vector;
 }
 
-QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString routefilename, const QString linefilename)
+QMap<int, QVector<Route>> FileParser::ParseRoute(const QString stopfilename, const QString routefilename, const QString linefilename)
 {
     QMap<int, QVector<Route>> lines;
 
@@ -112,10 +112,42 @@ QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString r
     int line_number;
     bool ok = true;
 
+    QStringList text_stream_line_list;
     QTextStream line_text(&line_file);
-    while (line_text.readLineInto(&line_line)) //jednotlive autobusove linky
+    while (true)
     {
-        line_list = line_line.split(',', QString::SkipEmptyParts);
+        line_line = line_text.readLine();
+        if (line_line == NULL)
+            break;
+
+        text_stream_line_list.append(line_line);
+    }
+
+    QStringList text_stream_route_list;
+    QTextStream route_text(&route_file);
+    while (true)
+    {
+        route_line = route_text.readLine();
+        if (route_line == NULL)
+            break;
+
+        text_stream_route_list.append(route_line);
+    }
+
+    QStringList text_stream_stop_list;
+    QTextStream stop_text(&stop_file);
+    while (true)
+    {
+        stop_line = stop_text.readLine();
+        if (stop_line == NULL)
+            break;
+
+        text_stream_stop_list.append(stop_line);
+    }
+
+    for (int l = 0; l < text_stream_line_list.length(); l++)
+    {
+        line_list = text_stream_line_list[l].split(',', QString::SkipEmptyParts);
         if (line_list.length() < 11)
         {
             std::cerr << "Incorrect amount of values, expected amount is 11 or more.\n";
@@ -132,11 +164,10 @@ QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString r
         QVector<Route> tmp_routes;
         for (int i = 1; i < line_list.length(); i++) //iteruje pres hodnoty autobusove linky, pres [Route]
         {
-            QTextStream route_text(&route_file);
-            while (route_text.readLineInto(&route_line)) //jednotlive spoje
+            for (int r = 0; r < text_stream_route_list.length(); r++)
             {
-                route_list = route_line.split(',', QString::SkipEmptyParts);
-                if (route_list.length() < 5 && (route_list.length() % 2) == 1)
+                route_list = text_stream_route_list[r].split(',', QString::SkipEmptyParts);
+                if (route_list.length() < 5 || (route_list.length() % 2) == 0)
                 {
                     std::cerr << "Incorrect amount of values, expected amount is even and 5 or more.\n";
                     return lines;
@@ -147,10 +178,9 @@ QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString r
                     QVector<QPair<Stop, int>> tmp_route;
                     for (int j = 1; j < route_list.length(); j += 2) //iteruje pres kazdou lichou hodnotu spoje, pres [QPair<Stop, int>]
                     {
-                        QTextStream stop_text(&stop_file);
-                        while (stop_text.readLineInto(&stop_line)) //jednotlive zastavky
+                        for (int s = 0; s < text_stream_stop_list.length(); s++)
                         {
-                            stop_list = stop_line.split(',', QString::SkipEmptyParts);
+                            stop_list = text_stream_stop_list[s].split(',', QString::SkipEmptyParts);
                             if (stop_list.length() != 3)
                             {
                                 std::cerr << "Incorrect amount of values, expected amount is even and 3.\n";
@@ -166,15 +196,12 @@ QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString r
                                     return lines;
                                 }
 
-                                // tmp_route = Route(tmp_stop, route_list.at(j + 1).toInt(&ok, 10));
-
                                 if (!ok)
                                 {
                                     std::cerr << "Incorrect value type of " << route_list.at(j + 1).toStdString() << ", expected type is integer.\n";
                                     return lines;
                                 }
 
-                                // tmp_routes.append(tmp_route);
                                 tmp_route.append(QPair<Stop, int>(tmp_stop, route_list.at(j + 1).toInt(&ok, 10)));
                                 break;
                             }
@@ -185,8 +212,6 @@ QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString r
                     break;
                 }
             }
-
-//            tmp_routes.append()
         }
 
         lines[line_number] = tmp_routes;
