@@ -60,3 +60,12 @@ void MainWindow::on_openMapButton_clicked()
     this->map = p.ParseStreet(fileName);
     this->drawMap(this->map);
 }
+
+void MainWindow::on_zoomSlider_valueChanged(int value)
+{
+    auto origin = ui->graphicsView->transform();
+
+    qreal scale = value / 10.0;
+
+    ui->graphicsView->setTransform(QTransform(scale, origin.m12(), origin.m21(), scale, origin.dx(), origin.dy()));
+}

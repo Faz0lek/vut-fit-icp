@@ -20,6 +20,8 @@ public:
 private slots:
     void on_openMapButton_clicked();
 
+    void on_zoomSlider_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
     QVector<Street> map;
