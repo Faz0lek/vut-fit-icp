@@ -44,6 +44,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     linesfile.csv \
-    routesfile.csv \
-    stopsfile.csv \
     streetsfile.csv
