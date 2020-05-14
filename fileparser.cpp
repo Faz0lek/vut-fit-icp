@@ -21,6 +21,7 @@ FileParser::FileParser()
  * @param streetfilename Name of file to be parsed.
  * @return QVector<Street> Vector of streets.
  */
+
 QVector<Street> FileParser::ParseStreet(const QString street_filename)
 {
     QVector<Street> vector;
