@@ -6,6 +6,8 @@
 #include <QVector>
 #include <QTimer>
 #include <QTime>
+#include <QMap>
+#include "route.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,9 +26,12 @@ private slots:
     void on_zoomSlider_valueChanged(int value);
     void onClockTick();
 
+    void on_openLinesButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QVector<Street> map;
+    QMap<int, Route> lines;
     QTimer* clock;
     QTime time;
 

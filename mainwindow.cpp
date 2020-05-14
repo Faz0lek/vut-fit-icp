@@ -59,7 +59,7 @@ void MainWindow::on_openMapButton_clicked()
 {
     FileParser p;
 
-    QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
+    const QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
 
     if (fileName.isNull())
     {
@@ -83,4 +83,17 @@ void MainWindow::onClockTick()
 {
     this->time = this->time.addSecs(60);
     ui->timeLabel->setText(this->time.toString("HH:mm"));
+}
+
+void MainWindow::on_openLinesButton_clicked()
+{
+    FileParser p;
+    const QString fileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
+
+    if (fileName.isNull())
+    {
+        return;
+    }
+
+    this->lines = p.ParseLine(fileName);
 }
