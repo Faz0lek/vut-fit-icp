@@ -16,8 +16,8 @@ class FileParser
 {
 public:
     FileParser();
-    QVector<Street> ParseStreet(const QString streetfilename);
-    QMap<int, QVector<Route>> ParseRoute(const QString stopfilename, const QString routefilename, const QString linefilename);
+    QVector<Street> ParseStreet(const QString street_filename);
+    QMap<int, Route> ParseLine(const QString line_filename);
 };
 
 #endif // FILEPARSER_H

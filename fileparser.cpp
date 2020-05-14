@@ -21,27 +21,28 @@ FileParser::FileParser()
  * @param streetfilename Name of file to be parsed.
  * @return QVector<Street> Vector of streets.
  */
-QVector<Street> FileParser::ParseStreet(const QString streetfilename)
+
+QVector<Street> FileParser::ParseStreet(const QString street_filename)
 {
     QVector<Street> vector;
 
-    QFile file(streetfilename);
+    QFile file(street_filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        std::cerr << "Failed opening file with provided streetfilename.\n";
+        std::cerr << "Failed opening file with provided street filename.\n";
         return vector;
     }
 
     QTextStream text(&file);
 
-    QString line;
+    QString tmp_line;
     QStringList str_list;
     int x1, y1, x2, y2;
     bool ok = true;
 
-    while (text.readLineInto(&line))
+    while (text.readLineInto(&tmp_line))
     {
-        str_list = line.split(',', QString::SkipEmptyParts);
+        str_list = tmp_line.split(',', QString::SkipEmptyParts);
         if (str_list.length() != 5)
         {
             std::cerr << "Incorrect amount of values, expected amount is 5.\n";
@@ -81,119 +82,70 @@ QVector<Street> FileParser::ParseStreet(const QString streetfilename)
     return vector;
 }
 
-QMap<int, QVector<Route>> FileParser::ParseRoute(const QString stopfilename, const QString routefilename, const QString linefilename)
+QMap<int, Route> FileParser::ParseLine(const QString line_filename)
 {
-    QMap<int, QVector<Route>> lines;
+    QMap<int, Route> bus_lines;
 
-    QFile stop_file(stopfilename);
-    if (!stop_file.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile file(line_filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        std::cerr << "Failed opening file with provided stopfilename.\n";
-        return lines;
+        std::cerr << "Failed opening file with provided line filename.\n";
+        return bus_lines;
     }
 
-    QFile route_file(routefilename);
-    if (!route_file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        std::cerr << "Failed opening file with provided routefilename.\n";
-        return lines;
-    }
-
-    QFile line_file(linefilename);
-    if (!line_file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        std::cerr << "Failed opening file with provided linefilename.\n";
-        return lines;
-    }
-
-    Stop tmp_stop;
-    QString stop_line, route_line, line_line;
-    QStringList stop_list, route_list, line_list;
-    int line_number;
+    QString tmp_line;
+    QStringList line_list, str_list;
+    QVector<QTime> tmp_times;
+    QVector<QPair<Stop, QVector<QTime>>> routes;
     bool ok = true;
 
-    QTextStream line_text(&line_file);
-    while (line_text.readLineInto(&line_line)) //jednotlive autobusove linky
+    QTextStream text(&file);
+    while (text.readLineInto(&tmp_line))
     {
-        line_list = line_line.split(',', QString::SkipEmptyParts);
-        if (line_list.length() < 11)
+        line_list = tmp_line.split(",,", QString::SkipEmptyParts);
+        if (line_list.length() < 3)
         {
-            std::cerr << "Incorrect amount of values, expected amount is 11 or more.\n";
-            return lines;
+            std::cerr << "Incorrect amount of values, expected amount is 3 or more.\n";
+            return bus_lines;
         }
 
-        line_number = line_list.at(0).toInt(&ok, 10);
-        if (!ok)
+        for (int i = 1; i < line_list.length(); i++)
         {
-            std::cerr << "Incorrect value type of " << line_list.at(0).toStdString() << ", expected type is integer.\n";
-            return lines;
-        }
-
-        QVector<Route> tmp_routes;
-        for (int i = 1; i < line_list.length(); i++) //iteruje pres hodnoty autobusove linky, pres [Route]
-        {
-            QTextStream route_text(&route_file);
-            while (route_text.readLineInto(&route_line)) //jednotlive spoje
+            str_list = line_list.at(i).split(",", QString::SkipEmptyParts);
+            if (str_list.length() < 12)
             {
-                route_list = route_line.split(',', QString::SkipEmptyParts);
-                if (route_list.length() < 5 && (route_list.length() % 2) == 1)
+                std::cerr << "Incorrect amount of values, expected amount is 12 or more.\n";
+                return bus_lines;
+            }
+
+            for (int j = 2; j < str_list.length(); j++)
+            {
+                tmp_times.append(QTime::fromString(str_list.at(j), "hh:mm"));
+                if (tmp_times.last().toString("hh:mm") != str_list.at(j))
                 {
-                    std::cerr << "Incorrect amount of values, expected amount is even and 5 or more.\n";
-                    return lines;
-                }
-
-                if (line_list.at(i) == route_list.at(0))
-                {
-                    QVector<QPair<Stop, int>> tmp_route;
-                    for (int j = 1; j < route_list.length(); j += 2) //iteruje pres kazdou lichou hodnotu spoje, pres [QPair<Stop, int>]
-                    {
-                        QTextStream stop_text(&stop_file);
-                        while (stop_text.readLineInto(&stop_line)) //jednotlive zastavky
-                        {
-                            stop_list = stop_line.split(',', QString::SkipEmptyParts);
-                            if (stop_list.length() != 3)
-                            {
-                                std::cerr << "Incorrect amount of values, expected amount is even and 3.\n";
-                                return lines;
-                            }
-
-                            if (route_list.at(j) == stop_list.at(0))
-                            {
-                                tmp_stop = Stop(stop_list.at(1), stop_list.at(2).toInt(&ok, 10));
-                                if (!ok)
-                                {
-                                    std::cerr << "Incorrect value type of " << stop_list.at(2).toStdString() << ", expected type is integer.\n";
-                                    return lines;
-                                }
-
-                                // tmp_route = Route(tmp_stop, route_list.at(j + 1).toInt(&ok, 10));
-
-                                if (!ok)
-                                {
-                                    std::cerr << "Incorrect value type of " << route_list.at(j + 1).toStdString() << ", expected type is integer.\n";
-                                    return lines;
-                                }
-
-                                // tmp_routes.append(tmp_route);
-                                tmp_route.append(QPair<Stop, int>(tmp_stop, route_list.at(j + 1).toInt(&ok, 10)));
-                                break;
-                            }
-                        }
-                    }
-
-                    tmp_routes.append(Route(tmp_route));
-                    break;
+                    std::cerr << "Incorrect value format of " << str_list.at(j).toStdString() << ", expected format is hh:mm (e.g. 09:06).\n";
+                    return bus_lines;
                 }
             }
 
-//            tmp_routes.append()
+            routes.append(QPair<Stop, QVector<QTime>>(Stop(str_list.at(0), str_list.at(1).toInt(&ok, 10)), tmp_times));
+            if (!ok)
+            {
+                std::cerr << "Incorrect value type of " << str_list.at(1).toStdString() << ", expected type is integer.\n";
+                return bus_lines;
+            }
+            tmp_times.clear();
         }
 
-        lines[line_number] = tmp_routes;
+        bus_lines[line_list.at(0).toInt(&ok, 10)] = Route(routes);
+        if (!ok)
+        {
+            std::cerr << "Incorrect value type of " << line_list.at(0).toStdString() << ", expected type is integer.\n";
+            return bus_lines;
+        }
+        routes.clear();
     }
 
-    stop_file.close();
-    route_file.close();
-    line_file.close();
-    return lines;
+    file.close();
+    return bus_lines;
 }
