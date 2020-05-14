@@ -12,8 +12,6 @@
 #include <QFileDialog>
 #include <QTimer>
 
-const QString MAP_FILENAME = R"(D:\Projects\ICP\vut-fit-icp\streetsfile.csv)";
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -96,4 +94,12 @@ void MainWindow::on_openLinesButton_clicked()
     }
 
     this->lines = p.ParseLine(fileName);
+    initStops();
+}
+
+void MainWindow::initStops()
+{
+    for (Street s : this->map)
+    {
+    }
 }

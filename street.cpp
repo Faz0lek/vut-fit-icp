@@ -17,3 +17,8 @@ QPoint Street::getEnd()
 {
     return this->coordinates.second;
 }
+
+QString Street::getName()
+{
+    return this->street_name;
+}

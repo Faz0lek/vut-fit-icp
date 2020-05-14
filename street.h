@@ -14,6 +14,7 @@ public:
 
     QPoint getBeginning();
     QPoint getEnd();
+    QString getName();
 private:
     QString street_name;
     QPair<QPoint, QPoint> coordinates;
