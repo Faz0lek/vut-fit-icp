@@ -10,17 +10,17 @@ Street::Street()
     , coordinates(QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1)))
 {}
 
-const QPoint Street::getBeginning()
+QPoint Street::getBeginning() const
 {
     return this->coordinates.first;
 }
 
-const QPoint Street::getEnd()
+QPoint Street::getEnd() const
 {
     return this->coordinates.second;
 }
 
-const QString Street::getStreetName()
+QString Street::getName() const
 {
     return this->street_name;
 }

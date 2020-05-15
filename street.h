@@ -12,9 +12,10 @@ public:
     Street(const QString street_name, const int x1, const int y1, const int x2, const int y2);
     Street();
 
-    const QPoint getBeginning();
-    const QPoint getEnd();
-    const QString getStreetName();
+    QPoint getBeginning() const;
+    QPoint getEnd() const;
+    QString getName() const;
+
 private:
     const QString street_name;
     const QPair<const QPoint, const QPoint> coordinates;
