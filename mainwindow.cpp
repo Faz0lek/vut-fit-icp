@@ -93,5 +93,5 @@ void MainWindow::on_openLinesButton_clicked()
         return;
     }
 
-    this->lines = p.ParseLine(fileName);
+    this->lines = p.ParseLine(fileName, this->map);
 }

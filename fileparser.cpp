@@ -134,7 +134,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, const QVec
 
             for (auto street : streets)
             {
-                if (street.getStreetName() == str_list.at(0))
+                if (street.getName() == str_list.at(0))
                 {
                     stops.append(Stop(&street, str_list.at(1).toInt(&ok, 10)));
                     if (!ok)

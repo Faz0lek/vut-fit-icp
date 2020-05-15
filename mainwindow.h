@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QTime>
 #include <QMap>
-#include "route.h"
+#include "busline.h"
 #include "stop.h"
 
 QT_BEGIN_NAMESPACE
@@ -34,7 +34,7 @@ private:
 
     QVector<Street> map;
     QVector<Stop> stops;
-    QMap<int, Route> lines;
+    QMap<int, BusLine> lines;
 
     QTimer* clock;
     QTime time;
