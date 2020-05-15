@@ -3,7 +3,7 @@
 #include "mainscene.h"
 #include <QGraphicsView>
 #include "street.h"
-#include "route.h"
+#include "busline.h"
 #include "fileparser.h"
 #include <QVector>
 #include <QString>
@@ -57,7 +57,7 @@ void MainWindow::on_openMapButton_clicked()
 {
     FileParser p;
 
-    const QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
+    QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
 
     if (fileName.isNull())
     {
@@ -75,6 +75,7 @@ void MainWindow::on_zoomSlider_valueChanged(int value)
     const qreal scale = value / 10.0;
     ui->graphicsView->setTransform(QTransform(scale, origin.m12(), origin.m21(), scale, origin.dx(), origin.dy()));
 }
+
 
 void MainWindow::onClockTick()
 {

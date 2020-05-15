@@ -1,9 +1,11 @@
 #include "stop.h"
 
-Stop::Stop(QString streetname, int distance)
-{
-    this->street_name = streetname;
-    this->distance = distance;
-}
+Stop::Stop(const Street * const street, const int distance)
+    : street(street)
+    , distance(distance)
+{}
 
-Stop::Stop(){}
+Stop::Stop()
+    : street(nullptr)
+    , distance(-1)
+{}

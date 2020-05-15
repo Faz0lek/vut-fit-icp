@@ -2,18 +2,18 @@
 #define VEHICLE_H
 
 #include "street.h"
-#include "route.h"
+#include "busline.h"
 
 class Vehicle
 {
 public:
     Vehicle();
-    Vehicle(Route* const r);
-    Vehicle(Street* const s, Route* const r);
+    Vehicle(BusLine* const r);
+    Vehicle(Street* const s, BusLine* const r);
 
 private:
     Street* currentStreet;
-    Route* route;
+    BusLine* route;
 };
 
 #endif // VEHICLE_H
