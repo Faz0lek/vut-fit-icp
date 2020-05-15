@@ -11,8 +11,17 @@
 
 #include "fileparser.h"
 
+FileParser::~FileParser()
+{
+    for (int i = 0; i < this->stops.length(); i++)
+    {
+        delete[] this->stops.at(i);
+    }
+}
+
 FileParser::FileParser()
-{}
+{
+}
 
 /**
  * @brief Method for parsing CVS files containing streets and their coordinates.
@@ -83,9 +92,10 @@ QVector<Street> FileParser::ParseStreet(const QString street_filename)
     return vector;
 }
 
-QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, const QVector<Street> streets)
+QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<Street> *streets)
 {
     QMap<int, BusLine> bus_lines;
+    QVector<Street> streets_value = *streets;
 
     QFile file(line_filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -95,9 +105,11 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, const QVec
     }
 
     QString tmp_line;
+    Stop *tmp_stop;
+    Street tmp_street;
     QStringList line_list, str_list;
     QVector<QTime> tmp_times;
-    QVector<QPair<const Stop* const, QVector<QTime>>> tmp_routes;
+    QVector<QPair<const Stop *const, QVector<QTime>>> tmp_routes;
     bool ok = true;
 
     QTextStream text(&file);
@@ -132,11 +144,13 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, const QVec
                 }
             }
 
-            for (auto street : streets)
+            for (int j = 0; j < streets_value.length(); j++)
             {
-                if (street.getStreetName() == str_list.at(0))
+                if (streets_value[j].getStreetName() == str_list.at(0))
                 {
-                    stops.append(Stop(&street, str_list.at(1).toInt(&ok, 10)));
+                    tmp_stop = new Stop(&(streets[0][j]), str_list.at(1).toInt(&ok, 10));
+                    this->stops.append(tmp_stop);
+                    tmp_routes.append(QPair<const Stop *const, QVector<QTime>>(tmp_stop, tmp_times));
                     if (!ok)
                     {
                         std::cerr << "Incorrect value type of " << str_list.at(1).toStdString() << ", expected type is integer.\n";
@@ -148,7 +162,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, const QVec
                 }
             }
 
-            tmp_routes.append(QPair<const Stop* const, QVector<QTime>>(&stops.last(), tmp_times));
+            //            tmp_routes.append(QPair<const Stop* const, QVector<QTime>>(&(this->stops.last()), tmp_times));
             tmp_times.clear();
         }
 
