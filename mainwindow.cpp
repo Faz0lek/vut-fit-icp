@@ -56,7 +56,7 @@ void MainWindow::drawMap(const QVector<Street>& map)
 
 void MainWindow::drawStops()
 {
-    const qreal WIDTH = 15.0;
+    const qreal WIDTH = 14.0;
     const qreal HEIGHT = WIDTH;
 
     qreal a = 0.0,
@@ -65,19 +65,27 @@ void MainWindow::drawStops()
           x = 0.0,
           y = 0.0;
 
-    /*for (const auto& stop : this->stops)
+    for (const auto& stop : this->stops)
     {
-        dx = qAbs(stop.getStreet()->getBeginning().x() - stop.getStreet()->getEnd().x());
-        dy = qAbs(stop.getStreet()->getBeginning().y() - stop.getStreet()->getEnd().y());
+        dx = qAbs(stop->getStreet()->getBeginning().x() - stop->getStreet()->getEnd().x());
+        dy = qAbs(stop->getStreet()->getBeginning().y() - stop->getStreet()->getEnd().y());
 
-        x = stop.getStreet()->getBeginning().x();
-        y = stop.getStreet()->getBeginning().y();
+        x = stop->getStreet()->getBeginning().x() - (WIDTH * 0.5);
+        y = stop->getStreet()->getBeginning().y() - (HEIGHT * 0.5);
 
         if (dx == 0) // vertical street
         {
+            if (stop->getStreet()->getBeginning().y() > stop->getStreet()->getEnd().y())
+                y -= stop->getDistance();
+            else
+                y += stop->getDistance();
         }
         else if (dy == 0) // horizontal street
         {
+            if (stop->getStreet()->getBeginning().x() > stop->getStreet()->getEnd().x())
+                x -= stop->getDistance();
+            else
+                x += stop->getDistance();
         }
         else
         {
@@ -85,19 +93,12 @@ void MainWindow::drawStops()
 
         auto e = ui->graphicsView->scene()->addEllipse(x, y, WIDTH, HEIGHT);
         e->setBrush(QBrush(Qt::red));
-    }*/
-
-    for (auto street : this->map)
-    {
-        qDebug () << "(" << street.getBeginning().x() << ", " << street.getBeginning().y() << ") (" << street.getEnd().x() << ", " << street.getEnd().y() << ")";
     }
 
-    qDebug() << "----------------------------------------------------------------";
-
-    for (auto stop : this->stops)
+    /*for (auto stop : this->stops)
     {
         qDebug() << "(" << stop->getStreet()->getBeginning().x() << ", " << stop->getStreet()->getBeginning().y() << ") (" << stop->getStreet()->getEnd().x() << ", " << stop->getStreet()->getEnd().y() << ")" << stop->getDistance();
-    }
+    }*/
 }
 
 void MainWindow::on_loadButton_clicked()
