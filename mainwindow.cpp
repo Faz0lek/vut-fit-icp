@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QTimer>
+#include <QtMath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -27,8 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->initScene();
 
     clock->start(1000);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -55,6 +54,41 @@ void MainWindow::drawMap(const QVector<Street>& map)
     }
 }
 
+void MainWindow::drawStops()
+{
+    const qreal WIDTH = 15.0;
+    const qreal HEIGHT = WIDTH;
+
+    qreal a = 0.0,
+          dx = 0.0,
+          dy = 0.0,
+          x = 0.0,
+          y = 0.0;
+
+    /*for (const auto& stop : this->stops)
+    {
+        dx = qAbs(stop.getStreet()->getBeginning().x() - stop.getStreet()->getEnd().x());
+        dy = qAbs(stop.getStreet()->getBeginning().y() - stop.getStreet()->getEnd().y());
+
+        qDebug() << stop.getStreet()->getBeginning().x() << " : " << stop.getStreet()->getBeginning().y() << "\n";
+
+        auto e = ui->graphicsView->scene()->addEllipse(x, y, WIDTH, HEIGHT);
+        e->setBrush(QBrush(Qt::red));
+    }*/
+
+    for (auto street : this->map)
+    {
+        qDebug () << "(" << street.getBeginning().x() << ", " << street.getBeginning().y() << ") (" << street.getEnd().x() << ", " << street.getEnd().y() << ")";
+    }
+
+    qDebug() << "----------------------------------------------------------------";
+
+    for (auto stop : this->stops)
+    {
+        qDebug() << "(" << stop.getStreet()->getBeginning().x() << ", " << stop.getStreet()->getBeginning().y() << ") (" << stop.getStreet()->getEnd().x() << ", " << stop.getStreet()->getEnd().y() << ")" << stop.getDistance();
+    }
+}
+
 void MainWindow::on_loadButton_clicked()
 {
     FileParser p;
@@ -78,6 +112,7 @@ void MainWindow::on_loadButton_clicked()
 
     this->lines = p.ParseLine(linesFileName, this->map);
     this->stops = p.getStops();
+    this->drawStops();
 }
 
 void MainWindow::on_zoomSlider_valueChanged(int value)

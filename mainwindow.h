@@ -42,5 +42,6 @@ private:
     void initScene();
     void drawMap(const QVector<Street>& map);
     void initStops();
+    void drawStops();
 };
 #endif // MAINWINDOW_H

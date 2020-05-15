@@ -13,6 +13,8 @@ public:
     BusLine(QVector<QPair<const Stop* const, QVector<QTime>>> routes);
     BusLine();
 
+    QVector<QPair<const Stop* const, QVector<QTime>>> getRoutes() const;
+
 private:
     QVector<QPair<const Stop* const, QVector<QTime>>> routes;
 };

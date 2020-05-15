@@ -9,3 +9,13 @@ Stop::Stop()
     : street(nullptr)
     , distance(-1)
 {}
+
+const Street* Stop::getStreet() const
+{
+    return this->street;
+}
+
+int Stop::getDistance() const
+{
+    return this->distance;
+}
