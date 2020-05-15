@@ -15,14 +15,15 @@
 class FileParser
 {
 public:
+    ~FileParser();
     FileParser();
     QVector<Street> ParseStreet(const QString street_filename);
-    QMap<int, BusLine> ParseLine(const QString line_filename, const QVector<Street> streets);
+    QMap<int, BusLine> ParseLine(const QString line_filename, QVector<Street> *streets);
 
     QVector<Stop> getStops() const;
 
 private:
-    QVector<Stop> stops;
+    QVector<Stop*> stops;
 };
 
 #endif // FILEPARSER_H
