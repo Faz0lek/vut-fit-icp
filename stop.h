@@ -10,6 +10,10 @@ class Stop
 public:
     Stop(const Street * const street, const int distance);
     Stop();
+
+    const Street * getStreet();
+    int getDistance();
+
 private:
     const Street * const street;
     const int distance;

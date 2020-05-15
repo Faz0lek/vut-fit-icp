@@ -22,6 +22,7 @@ public:
 
 private:
     QVector<Stop*> stops;
+    QVector<Stop*> unique_stops;
 };
 
 #endif // FILEPARSER_H
