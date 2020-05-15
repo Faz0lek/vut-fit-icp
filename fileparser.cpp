@@ -146,7 +146,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
 
             for (int j = 0; j < streets_value.length(); j++)
             {
-                if (streets_value[j].getStreetName() == str_list.at(0))
+                if (streets_value[j].getName() == str_list.at(0))
                 {
                     tmp_stop = new Stop(&(streets[0][j]), str_list.at(1).toInt(&ok, 10));
                     this->stops.append(tmp_stop);
@@ -180,7 +180,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
     return bus_lines;
 }
 
-QVector<Stop> FileParser::getStops() const
+QVector<Stop*> FileParser::getStops() const
 {
     return this->stops;
 }

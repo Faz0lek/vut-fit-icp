@@ -33,7 +33,7 @@ private:
     Ui::MainWindow *ui;
 
     QVector<Street> map;
-    QVector<Stop> stops;
+    QVector<Stop*> stops;
     QMap<int, BusLine> lines;
 
     QTimer* clock;

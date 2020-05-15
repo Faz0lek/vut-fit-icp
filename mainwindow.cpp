@@ -70,7 +70,18 @@ void MainWindow::drawStops()
         dx = qAbs(stop.getStreet()->getBeginning().x() - stop.getStreet()->getEnd().x());
         dy = qAbs(stop.getStreet()->getBeginning().y() - stop.getStreet()->getEnd().y());
 
-        qDebug() << stop.getStreet()->getBeginning().x() << " : " << stop.getStreet()->getBeginning().y() << "\n";
+        x = stop.getStreet()->getBeginning().x();
+        y = stop.getStreet()->getBeginning().y();
+
+        if (dx == 0) // vertical street
+        {
+        }
+        else if (dy == 0) // horizontal street
+        {
+        }
+        else
+        {
+        }
 
         auto e = ui->graphicsView->scene()->addEllipse(x, y, WIDTH, HEIGHT);
         e->setBrush(QBrush(Qt::red));
@@ -85,7 +96,7 @@ void MainWindow::drawStops()
 
     for (auto stop : this->stops)
     {
-        qDebug() << "(" << stop.getStreet()->getBeginning().x() << ", " << stop.getStreet()->getBeginning().y() << ") (" << stop.getStreet()->getEnd().x() << ", " << stop.getStreet()->getEnd().y() << ")" << stop.getDistance();
+        qDebug() << "(" << stop->getStreet()->getBeginning().x() << ", " << stop->getStreet()->getBeginning().y() << ") (" << stop->getStreet()->getEnd().x() << ", " << stop->getStreet()->getEnd().y() << ")" << stop->getDistance();
     }
 }
 
@@ -110,7 +121,7 @@ void MainWindow::on_loadButton_clicked()
         return;
     }
 
-    this->lines = p.ParseLine(linesFileName, this->map);
+    this->lines = p.ParseLine(linesFileName, &this->map);
     this->stops = p.getStops();
     this->drawStops();
 }
