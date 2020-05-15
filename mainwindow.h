@@ -31,9 +31,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
     QVector<Street> map;
     QVector<Stop> stops;
     QMap<int, Route> lines;
+
     QTimer* clock;
     QTime time;
 

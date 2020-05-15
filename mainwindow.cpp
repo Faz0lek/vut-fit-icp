@@ -76,7 +76,6 @@ void MainWindow::on_zoomSlider_valueChanged(int value)
     ui->graphicsView->setTransform(QTransform(scale, origin.m12(), origin.m21(), scale, origin.dx(), origin.dy()));
 }
 
-
 void MainWindow::onClockTick()
 {
     this->time = this->time.addSecs(60);
@@ -94,12 +93,4 @@ void MainWindow::on_openLinesButton_clicked()
     }
 
     this->lines = p.ParseLine(fileName);
-    initStops();
-}
-
-void MainWindow::initStops()
-{
-    for (Street s : this->map)
-    {
-    }
 }
