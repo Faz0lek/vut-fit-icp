@@ -9,14 +9,15 @@
 class Street
 {
 public:
-    Street(QString street_name, int x1, int y1, int x2, int y2);
+    Street(const QString street_name, const int x1, const int y1, const int x2, const int y2);
     Street();
 
-    QPoint getBeginning();
-    QPoint getEnd();
+    const QPoint getBeginning();
+    const QPoint getEnd();
+    const QString getStreetName();
 private:
-    QString street_name;
-    QPair<QPoint, QPoint> coordinates;
+    const QString street_name;
+    const QPair<const QPoint, const QPoint> coordinates;
 };
 
 #endif // STREET_H

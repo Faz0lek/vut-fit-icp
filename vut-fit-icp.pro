@@ -16,20 +16,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    busline.cpp \
     fileparser.cpp \
     main.cpp \
     mainscene.cpp \
     mainwindow.cpp \
-    route.cpp \
     street.cpp \
     vehicle.cpp \
     stop.cpp
 
 HEADERS += \
+    busline.h \
     fileparser.h \
     mainscene.h \
     mainwindow.h \
-    route.h \
     street.h \
     vehicle.h \
     stop.h

@@ -1,19 +1,26 @@
 #include "street.h"
 
-Street::Street(QString street_name, int x1, int y1, int x2, int y2)
-{
-    this->street_name = street_name;
-    this->coordinates = QPair<QPoint, QPoint>(QPoint(x1, y1), QPoint(x2, y2));
-}
+Street::Street(const QString street_name, const int x1, const int y1, const int x2, const int y2)
+    : street_name(street_name)
+    , coordinates(QPair<QPoint, QPoint>(QPoint(x1, y1), QPoint(x2, y2)))
+{}
 
-Street::Street(){}
+Street::Street()
+    : street_name(QString(""))
+    , coordinates(QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1)))
+{}
 
-QPoint Street::getBeginning()
+const QPoint Street::getBeginning()
 {
     return this->coordinates.first;
 }
 
-QPoint Street::getEnd()
+const QPoint Street::getEnd()
 {
     return this->coordinates.second;
+}
+
+const QString Street::getStreetName()
+{
+    return this->street_name;
 }
