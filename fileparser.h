@@ -10,14 +10,17 @@
 #include <QMap>
 #include "street.h"
 #include "stop.h"
-#include "route.h"
+#include "busline.h"
 
 class FileParser
 {
 public:
     FileParser();
     QVector<Street> ParseStreet(const QString street_filename);
-    QMap<int, Route> ParseLine(const QString line_filename);
+    QMap<int, BusLine> ParseLine(const QString line_filename, const QVector<Street> streets);
+
+private:
+    QVector<Stop> stops;
 };
 
 #endif // FILEPARSER_H

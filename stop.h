@@ -1,16 +1,18 @@
 #ifndef STOP_H
 #define STOP_H
 
+#include "street.h"
+
 #include <QString>
 
 class Stop
 {
 public:
-    Stop(QString streetname, int distance);
+    Stop(const Street * const street, const int distance);
     Stop();
 private:
-    QString street_name;
-    int distance;
+    const Street * const street;
+    const int distance;
 };
 
 #endif // STOP_H
