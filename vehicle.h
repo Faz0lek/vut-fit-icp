@@ -7,13 +7,19 @@
 class Vehicle
 {
 public:
-    Vehicle();
-    Vehicle(BusLine* const r);
-    Vehicle(Street* const s, BusLine* const r);
+    Vehicle(BusLine const& r);
+
+    const Street* getCurrentStreet() const;
+    const Stop* getPrevStop() const;
+    const Stop* getNextStop() const;
+    const BusLine& getRoute() const;
 
 private:
-    Street* currentStreet;
-    BusLine* route;
+    const Street* currentStreet;
+    const Stop* prevStop;
+    const Stop* nextStop;
+
+    BusLine const& route;
 };
 
 #endif // VEHICLE_H

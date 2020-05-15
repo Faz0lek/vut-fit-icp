@@ -1,16 +1,27 @@
 #include "vehicle.h"
 
-Vehicle::Vehicle()
-    : currentStreet(nullptr)
-    , route(nullptr)
-{}
-
-Vehicle::Vehicle(BusLine* const r)
+Vehicle::Vehicle(BusLine const& r)
     : currentStreet(nullptr)
     , route(r)
 {}
 
-Vehicle::Vehicle(Street* const s, BusLine* const r)
-    : currentStreet(s)
-    , route(r)
-{}
+const Street *Vehicle::getCurrentStreet() const
+{
+    return this->currentStreet;
+}
+
+const Stop *Vehicle::getPrevStop() const
+{
+    return this->prevStop;
+}
+
+const Stop* Vehicle::getNextStop() const
+{
+    return this->nextStop;
+}
+
+const BusLine& Vehicle::getRoute() const
+{
+    return this->route;
+}
+

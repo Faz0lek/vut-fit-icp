@@ -87,8 +87,11 @@ void MainWindow::drawStops()
             else
                 x += stop->getDistance();
         }
-        else
+        else // diagonal street
         {
+            a = qAtan(dy / dx);
+            x += qCos(a);
+            y += qSin(a);
         }
 
         auto e = ui->graphicsView->scene()->addEllipse(x, y, WIDTH, HEIGHT);
