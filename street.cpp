@@ -20,7 +20,7 @@ const QPoint Street::getEnd()
     return this->coordinates.second;
 }
 
-const QString Street::getStreetName()
+QString Street::getName() const
 {
     return this->street_name;
 }

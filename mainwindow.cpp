@@ -12,8 +12,6 @@
 #include <QFileDialog>
 #include <QTimer>
 
-const QString MAP_FILENAME = R"(D:\Projects\ICP\vut-fit-icp\streetsfile.csv)";
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -83,4 +81,17 @@ void MainWindow::onClockTick()
 {
     this->time = this->time.addSecs(60);
     ui->timeLabel->setText(this->time.toString("HH:mm"));
+}
+
+void MainWindow::on_openLinesButton_clicked()
+{
+    FileParser p;
+    const QString fileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
+
+    if (fileName.isNull())
+    {
+        return;
+    }
+
+    this->lines = p.ParseLine(fileName);
 }
