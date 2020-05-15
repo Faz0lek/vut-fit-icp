@@ -165,3 +165,8 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, const QVec
     file.close();
     return bus_lines;
 }
+
+QVector<Stop> FileParser::getStops() const
+{
+    return this->stops;
+}

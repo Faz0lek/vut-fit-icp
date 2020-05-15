@@ -6,3 +6,8 @@ BusLine::BusLine(QVector<QPair<const Stop* const, QVector<QTime>>> routes)
 
 BusLine::BusLine()
 {}
+
+QVector<QPair<const Stop * const, QVector<QTime> > > BusLine::getRoutes() const
+{
+    return this->routes;
+}

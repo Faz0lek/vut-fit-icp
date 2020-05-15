@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->initScene();
 
     clock->start(1000);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -75,6 +77,7 @@ void MainWindow::on_loadButton_clicked()
     }
 
     this->lines = p.ParseLine(linesFileName, this->map);
+    this->stops = p.getStops();
 }
 
 void MainWindow::on_zoomSlider_valueChanged(int value)
@@ -88,9 +91,20 @@ void MainWindow::onClockTick()
 {
     this->time = this->time.addSecs(60);
     ui->timeLabel->setText(this->time.toString("HH:mm"));
+
+    for (const auto& line : this->lines)
+    {
+        for (const auto& route : line.getRoutes())
+        {
+            for (const auto& t : route.second)
+            {
+                if (t == this->time)
+                {
+
+                }
+            }
+        }
+    }
 }
 
-void MainWindow::on_setTimeButton_clicked()
-{
-
-}
+void MainWindow::on_setTimeButton_clicked() {}
