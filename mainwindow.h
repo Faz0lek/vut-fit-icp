@@ -23,11 +23,11 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_openMapButton_clicked();
+    void on_loadButton_clicked();
     void on_zoomSlider_valueChanged(int value);
     void onClockTick();
 
-    void on_openLinesButton_clicked();
+    void on_setTimeButton_clicked();
 
 private:
     Ui::MainWindow *ui;

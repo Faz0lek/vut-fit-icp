@@ -53,20 +53,28 @@ void MainWindow::drawMap(const QVector<Street>& map)
     }
 }
 
-void MainWindow::on_openMapButton_clicked()
+void MainWindow::on_loadButton_clicked()
 {
     FileParser p;
 
-    QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
-
-    if (fileName.isNull())
+    const QString mapFileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
+    if (mapFileName.isNull())
     {
         return;
     }
 
-    this->map = p.ParseStreet(fileName);
+    this->map = p.ParseStreet(mapFileName);
     this->drawMap(this->map);
     ui->zoomSlider->show();
+
+
+    const QString linesFileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
+    if (linesFileName.isNull())
+    {
+        return;
+    }
+
+    this->lines = p.ParseLine(linesFileName, this->map);
 }
 
 void MainWindow::on_zoomSlider_valueChanged(int value)
@@ -76,22 +84,13 @@ void MainWindow::on_zoomSlider_valueChanged(int value)
     ui->graphicsView->setTransform(QTransform(scale, origin.m12(), origin.m21(), scale, origin.dx(), origin.dy()));
 }
 
-
 void MainWindow::onClockTick()
 {
     this->time = this->time.addSecs(60);
     ui->timeLabel->setText(this->time.toString("HH:mm"));
 }
 
-void MainWindow::on_openLinesButton_clicked()
+void MainWindow::on_setTimeButton_clicked()
 {
-    FileParser p;
-    const QString fileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
 
-    if (fileName.isNull())
-    {
-        return;
-    }
-
-    this->lines = p.ParseLine(fileName, this->map);
 }
