@@ -42,7 +42,7 @@ Vehicle::Vehicle(BusLine const& r, size_t index, qreal a, qreal s) :
 
     // set start position
     const QPointF p = route[0].first->getCoordinates();
-    setPos(p.x() + (WIDTH * 0.5) + 7.0, p.y() - 1.0);
+    setPos(p.x() - 1.0, p.y() - 1.0);
 
     // set speed
     speed = 5;
