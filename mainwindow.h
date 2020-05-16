@@ -9,6 +9,7 @@
 #include <QMap>
 #include "busline.h"
 #include "stop.h"
+#include "vehicle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,6 +36,7 @@ private:
     QVector<Street> map;
     QVector<Stop*> stops;
     QMap<int, BusLine> lines;
+    QList<Vehicle*> buses;
 
     QTimer* clock;
     QTime time;

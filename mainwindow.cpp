@@ -12,6 +12,7 @@
 #include <QFileDialog>
 #include <QTimer>
 #include <QtMath>
+#include "vehicle.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -37,11 +38,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::initScene()
 {
-    auto* scene = new MainScene(ui->graphicsView);
+    auto* scene = new QGraphicsScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-    //ui->graphicsView->setStyleSheet("background-color: rgb(255, 255, 255);");
-    //ui->openMapButton->setStyleSheet("background-color: rgb(255, 255, 255);");
+
+    connect(clock, SIGNAL(timeout()), scene, SLOT(move()));
 }
 
 void MainWindow::drawMap(const QVector<Street>& map)
@@ -56,52 +57,13 @@ void MainWindow::drawMap(const QVector<Street>& map)
 
 void MainWindow::drawStops()
 {
-    const qreal WIDTH = 14.0;
-    const qreal HEIGHT = WIDTH;
-
-    qreal a = 0.0,
-          dx = 0.0,
-          dy = 0.0,
-          x = 0.0,
-          y = 0.0;
-
     for (const auto& stop : this->stops)
     {
-        dx = qAbs(stop->getStreet()->getBeginning().x() - stop->getStreet()->getEnd().x());
-        dy = qAbs(stop->getStreet()->getBeginning().y() - stop->getStreet()->getEnd().y());
+        QPointF p = stop->getCoordinates();
 
-        x = stop->getStreet()->getBeginning().x() - (WIDTH * 0.5);
-        y = stop->getStreet()->getBeginning().y() - (HEIGHT * 0.5);
-
-        if (dx == 0) // vertical street
-        {
-            if (stop->getStreet()->getBeginning().y() > stop->getStreet()->getEnd().y())
-                y -= stop->getDistance();
-            else
-                y += stop->getDistance();
-        }
-        else if (dy == 0) // horizontal street
-        {
-            if (stop->getStreet()->getBeginning().x() > stop->getStreet()->getEnd().x())
-                x -= stop->getDistance();
-            else
-                x += stop->getDistance();
-        }
-        else // diagonal street
-        {
-            a = qAtan(dy / dx);
-            x += qCos(a);
-            y += qSin(a);
-        }
-
-        auto e = ui->graphicsView->scene()->addEllipse(x, y, WIDTH, HEIGHT);
+        auto e = ui->graphicsView->scene()->addEllipse(p.x(), p.y(), stop->WIDTH, stop->HEIGHT);
         e->setBrush(QBrush(Qt::red));
     }
-
-    /*for (auto stop : this->stops)
-    {
-        qDebug() << "(" << stop->getStreet()->getBeginning().x() << ", " << stop->getStreet()->getBeginning().y() << ") (" << stop->getStreet()->getEnd().x() << ", " << stop->getStreet()->getEnd().y() << ")" << stop->getDistance();
-    }*/
 }
 
 void MainWindow::on_loadButton_clicked()
@@ -144,15 +106,16 @@ void MainWindow::onClockTick()
 
     for (const auto& line : this->lines)
     {
-        for (const auto& route : line.getRoutes())
+        size_t i = 0;
+        for (const auto& t : line.getRoutes()[0].second)
         {
-            for (const auto& t : route.second)
+            if (t.hour() == this->time.hour() && t.minute() == this->time.minute())
             {
-                if (t == this->time)
-                {
-
-                }
+                this->buses.append(new Vehicle(line, i));
+                ui->graphicsView->scene()->addItem(buses.last());
+                break;
             }
+            i++;
         }
     }
 }
