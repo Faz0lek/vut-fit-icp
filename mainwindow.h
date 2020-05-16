@@ -10,6 +10,7 @@
 #include "busline.h"
 #include "stop.h"
 #include "vehicle.h"
+#include "fileparser.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,6 +33,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    FileParser p;
 
     QVector<Street> map;
     QVector<Stop*> stops;

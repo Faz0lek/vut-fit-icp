@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->zoomSlider->hide();
 
+    p = FileParser();
+
     clock = new QTimer(this);
     connect(clock, &QTimer::timeout, this, &MainWindow::onClockTick);
 
@@ -41,8 +43,7 @@ void MainWindow::initScene()
     auto* scene = new QGraphicsScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-
-    connect(clock, SIGNAL(timeout()), scene, SLOT(move()));
+    connect(clock, SIGNAL(timeout()), scene, SLOT(advance()));
 }
 
 void MainWindow::drawMap(const QVector<Street>& map)
@@ -68,8 +69,6 @@ void MainWindow::drawStops()
 
 void MainWindow::on_loadButton_clicked()
 {
-    FileParser p;
-
     const QString mapFileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
     if (mapFileName.isNull())
     {
@@ -111,8 +110,9 @@ void MainWindow::onClockTick()
         {
             if (t.hour() == this->time.hour() && t.minute() == this->time.minute())
             {
-                this->buses.append(new Vehicle(line, i));
-                ui->graphicsView->scene()->addItem(buses.last());
+                Vehicle* v = new Vehicle(line, i);
+                this->buses.append(v);
+                ui->graphicsView->scene()->addItem(v);
                 break;
             }
             i++;

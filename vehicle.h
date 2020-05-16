@@ -18,14 +18,14 @@ public:
     const Stop* getNextStop() const;
     const BusLine& getRoute() const;
 
-    QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR) override;
-
     constexpr static qreal WIDTH = 16.0;
     constexpr static qreal HEIGHT = 16.0;
 
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
+
 protected:
-    void move(int phase);
+    void advance(int phase);
 
 private:
     const Street* currentStreet;

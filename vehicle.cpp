@@ -22,17 +22,20 @@ Vehicle::Vehicle(BusLine const& r, size_t index, qreal a, qreal s) :
     // set street
     this->currentStreet = route[0].first->getStreet();
 
+qDebug() << "4";
     // set rotation TODO: calculate correct angle for next stop (ORIENTATION MATTERS)
+    if (!this->currentStreet)
+        qDebug() << "PEPEG";
     const qreal dx = qAbs(this->currentStreet->getBeginning().x() - this->currentStreet->getEnd().x());
     const qreal dy = qAbs(this->currentStreet->getBeginning().y() - this->currentStreet->getEnd().y());
-
+qDebug() << "5";
     if (dx == 0) // vertical street
     {
-
+        angle = 90;
     }
     else if (dy == 0) // horizontal street
     {
-
+        angle = 180;
     }
     else // diagonal street
     {
@@ -85,13 +88,14 @@ void Vehicle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     painter->drawRect(r);
 }
 
-void Vehicle::move(int phase)
+void Vehicle::advance(int phase)
 {
     if (!phase) return;
 
     qDebug() << "I LIKE TO MOVE IT MOVE IT";
 
     QPointF location = this->pos();
+    (void)location;
     setPos(mapToParent(0, -(speed)));
 }
 
