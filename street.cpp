@@ -1,5 +1,7 @@
 #include "street.h"
 
+#include <QtMath>
+
 Street::Street(const QString street_name, const int x1, const int y1, const int x2, const int y2)
     : street_name(street_name)
     , coordinates(QPair<QPoint, QPoint>(QPoint(x1, y1), QPoint(x2, y2)))
@@ -23,4 +25,9 @@ QPoint Street::getEnd() const
 QString Street::getName() const
 {
     return this->street_name;
+}
+
+qreal Street::getLength() const
+{
+    return qSqrt(qPow(qAbs(getBeginning().x() - getEnd().x()), 2) + qPow(qAbs(getBeginning().y() - getEnd().y()), 2));
 }

@@ -15,6 +15,7 @@ public:
     QPoint getBeginning() const;
     QPoint getEnd() const;
     QString getName() const;
+    qreal getLength() const;
 
 private:
     const QString street_name;

@@ -21,11 +21,11 @@ public:
     constexpr static qreal WIDTH = 16.0;
     constexpr static qreal HEIGHT = 16.0;
 
-    QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
+    virtual QRectF boundingRect() const override;
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR) override;
 
 protected:
-    void advance(int phase);
+    virtual void advance(int phase) override;
 
 private:
     const Street* currentStreet;
@@ -40,6 +40,7 @@ private:
     qreal speed;
 
     void setAngle();
+    void setSpeed();
 
     constexpr static qreal ANGLE_UP = 0.0;
     constexpr static qreal ANGLE_RIGHT = 90.0;
