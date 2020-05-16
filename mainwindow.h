@@ -49,7 +49,7 @@ private:
     void initStops();
     void drawStops();
 
-    constexpr static int DEFAULT_SPEED = 20;
-    int timeout_multiplier;
+    constexpr static int DEFAULT_SPEED = 1000;
+    qreal timeout_multiplier;
 };
 #endif // MAINWINDOW_H

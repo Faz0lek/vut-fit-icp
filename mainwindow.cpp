@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->zoomSlider->hide();
 
-    this->timeout_multiplier = 50;
+    this->timeout_multiplier = 1;
 
     p = FileParser();
 
@@ -66,7 +66,7 @@ void MainWindow::drawStops()
     {
         QPointF p = stop->getCoordinates();
 
-        auto e = ui->graphicsView->scene()->addEllipse(p.x(), p.y(), stop->WIDTH, stop->HEIGHT);
+        auto e = ui->graphicsView->scene()->addEllipse(p.x() - (Stop::WIDTH * 0.5), p.y() - (Stop::HEIGHT * 0.5), stop->WIDTH, stop->HEIGHT);
         e->setBrush(QBrush(Qt::red));
     }
 }
@@ -82,7 +82,6 @@ void MainWindow::on_loadButton_clicked()
     this->map = p.ParseStreet(mapFileName);
     this->drawMap(this->map);
     ui->zoomSlider->show();
-
 
     const QString linesFileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
     if (linesFileName.isNull())
@@ -117,7 +116,7 @@ void MainWindow::on_loadButton_clicked()
             }
 
             this->time = time_time;
-            this->clock->start(DEFAULT_SPEED * (100 - timeout_multiplier));
+            this->clock->start(DEFAULT_SPEED / timeout_multiplier);
             break;
         }
         else
@@ -125,7 +124,7 @@ void MainWindow::on_loadButton_clicked()
             warning_box.exec();
 
             this->time = QTime(6, 0);
-            this->clock->start(DEFAULT_SPEED * (100 - timeout_multiplier));
+            this->clock->start(DEFAULT_SPEED / timeout_multiplier);
             break;
         }
     }
@@ -174,18 +173,17 @@ void MainWindow::on_setSpeedButton_clicked()
         if (ok == true)
         {
             ok = false;
-            speed_speed = text_speed.toInt(&ok, 10);
-            if (!ok || speed_speed > 99 || speed_speed < 1)
+            speed_speed = text_speed.toDouble(&ok);
+            if (!ok || speed_speed > 100 || speed_speed <= 0)
             {
                 err_box.exec();
                 continue;
             }
 
-
             this->timeout_multiplier = speed_speed;
             ui->speedLabel->setText((QString)"Speed: " + QString::number(this->timeout_multiplier));
             if (this->clock->isActive())
-                this->clock->start(DEFAULT_SPEED * (100 - timeout_multiplier));
+                this->clock->start(DEFAULT_SPEED / timeout_multiplier);
 
             break;
         }

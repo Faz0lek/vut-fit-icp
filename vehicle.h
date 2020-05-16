@@ -11,7 +11,7 @@
 class Vehicle : public QGraphicsItem
 {
 public:
-    Vehicle(BusLine const& r, size_t index, qreal a = 0.0, qreal s = 0.0);
+    Vehicle(BusLine const& r, size_t index);
 
     const Street* getCurrentStreet() const;
     const Stop* getPrevStop() const;
@@ -33,19 +33,13 @@ private:
     const Stop* nextStop;
 
     BusLine const& schedule;
-
     QVector<QPair<const Stop* const, QTime>> route;
+    QVector<QPointF> points;
 
     qreal angle;
     qreal speed;
 
-    void setAngle();
-    void setSpeed();
-
-    constexpr static qreal ANGLE_UP = 0.0;
-    constexpr static qreal ANGLE_RIGHT = 90.0;
-    constexpr static qreal ANGLE_DOWN = 180.0;
-    constexpr static qreal ANGLE_LEFT = 270.0;
+    int getTimeDiff(const QTime first, const QTime second) const;
 };
 
 #endif // VEHICLE_H
