@@ -11,6 +11,8 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QTimer>
+#include <QtMath>
+#include "vehicle.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -36,11 +38,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::initScene()
 {
-    auto* scene = new MainScene(ui->graphicsView);
+    auto* scene = new QGraphicsScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-    //ui->graphicsView->setStyleSheet("background-color: rgb(255, 255, 255);");
-    //ui->openMapButton->setStyleSheet("background-color: rgb(255, 255, 255);");
+
+    connect(clock, SIGNAL(timeout()), scene, SLOT(move()));
 }
 
 void MainWindow::drawMap(const QVector<Street>& map)
@@ -53,20 +55,41 @@ void MainWindow::drawMap(const QVector<Street>& map)
     }
 }
 
-void MainWindow::on_openMapButton_clicked()
+void MainWindow::drawStops()
+{
+    for (const auto& stop : this->stops)
+    {
+        QPointF p = stop->getCoordinates();
+
+        auto e = ui->graphicsView->scene()->addEllipse(p.x(), p.y(), stop->WIDTH, stop->HEIGHT);
+        e->setBrush(QBrush(Qt::red));
+    }
+}
+
+void MainWindow::on_loadButton_clicked()
 {
     FileParser p;
 
-    QString fileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
-
-    if (fileName.isNull())
+    const QString mapFileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
+    if (mapFileName.isNull())
     {
         return;
     }
 
-    this->map = p.ParseStreet(fileName);
+    this->map = p.ParseStreet(mapFileName);
     this->drawMap(this->map);
     ui->zoomSlider->show();
+
+
+    const QString linesFileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
+    if (linesFileName.isNull())
+    {
+        return;
+    }
+
+    this->lines = p.ParseLine(linesFileName, &this->map);
+    this->stops = p.getStops();
+    this->drawStops();
 }
 
 void MainWindow::on_zoomSlider_valueChanged(int value)
@@ -76,22 +99,25 @@ void MainWindow::on_zoomSlider_valueChanged(int value)
     ui->graphicsView->setTransform(QTransform(scale, origin.m12(), origin.m21(), scale, origin.dx(), origin.dy()));
 }
 
-
 void MainWindow::onClockTick()
 {
     this->time = this->time.addSecs(60);
     ui->timeLabel->setText(this->time.toString("HH:mm"));
-}
 
-void MainWindow::on_openLinesButton_clicked()
-{
-    FileParser p;
-    const QString fileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
-
-    if (fileName.isNull())
+    for (const auto& line : this->lines)
     {
-        return;
+        size_t i = 0;
+        for (const auto& t : line.getRoutes()[0].second)
+        {
+            if (t.hour() == this->time.hour() && t.minute() == this->time.minute())
+            {
+                this->buses.append(new Vehicle(line, i));
+                ui->graphicsView->scene()->addItem(buses.last());
+                break;
+            }
+            i++;
+        }
     }
-
-    this->lines = p.ParseLine(fileName, this->map);
 }
+
+void MainWindow::on_setTimeButton_clicked() {}

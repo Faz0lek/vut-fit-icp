@@ -20,6 +20,8 @@ public:
     QVector<Street> ParseStreet(const QString street_filename);
     QMap<int, BusLine> ParseLine(const QString line_filename, QVector<Street> *streets);
 
+    QVector<Stop*> getStops() const;
+
 private:
     QVector<Stop*> stops;
     QVector<Stop*> unique_stops;

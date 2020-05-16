@@ -9,6 +9,7 @@
 #include <QMap>
 #include "busline.h"
 #include "stop.h"
+#include "vehicle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,18 +24,19 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_openMapButton_clicked();
+    void on_loadButton_clicked();
     void on_zoomSlider_valueChanged(int value);
     void onClockTick();
 
-    void on_openLinesButton_clicked();
+    void on_setTimeButton_clicked();
 
 private:
     Ui::MainWindow *ui;
 
     QVector<Street> map;
-    QVector<Stop> stops;
+    QVector<Stop*> stops;
     QMap<int, BusLine> lines;
+    QList<Vehicle*> buses;
 
     QTimer* clock;
     QTime time;
@@ -42,5 +44,6 @@ private:
     void initScene();
     void drawMap(const QVector<Street>& map);
     void initStops();
+    void drawStops();
 };
 #endif // MAINWINDOW_H
