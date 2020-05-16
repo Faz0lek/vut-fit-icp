@@ -38,6 +38,13 @@ private:
 
     qreal angle;
     qreal speed;
+
+    void setAngle();
+
+    constexpr static qreal ANGLE_UP = 0.0;
+    constexpr static qreal ANGLE_RIGHT = 90.0;
+    constexpr static qreal ANGLE_DOWN = 180.0;
+    constexpr static qreal ANGLE_LEFT = 270.0;
 };
 
 #endif // VEHICLE_H

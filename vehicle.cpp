@@ -22,25 +22,8 @@ Vehicle::Vehicle(BusLine const& r, size_t index, qreal a, qreal s) :
     // set street
     this->currentStreet = route[0].first->getStreet();
 
-qDebug() << "4";
     // set rotation TODO: calculate correct angle for next stop (ORIENTATION MATTERS)
-    if (!this->currentStreet)
-        qDebug() << "PEPEG";
-    const qreal dx = qAbs(this->currentStreet->getBeginning().x() - this->currentStreet->getEnd().x());
-    const qreal dy = qAbs(this->currentStreet->getBeginning().y() - this->currentStreet->getEnd().y());
-qDebug() << "5";
-    if (dx == 0) // vertical street
-    {
-        angle = 90;
-    }
-    else if (dy == 0) // horizontal street
-    {
-        angle = 180;
-    }
-    else // diagonal street
-    {
-        this->angle = qAtan(dy / dx);
-    }
+    setAngle();
     setRotation(angle);
 
     // set start position
@@ -97,5 +80,69 @@ void Vehicle::advance(int phase)
     QPointF location = this->pos();
     (void)location;
     setPos(mapToParent(0, -(speed)));
+}
+
+void Vehicle::setAngle()
+{
+    if (this->nextStop == Q_NULLPTR) return;
+
+    const qreal dx = this->currentStreet->getBeginning().x() - this->currentStreet->getEnd().x();
+    const qreal dy = this->currentStreet->getBeginning().y() - this->currentStreet->getEnd().y();
+
+    if (dx == 0.0) // vertical street
+    {
+
+        if (dy > 0.0) // street is bottom-up
+        {
+            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getEnd() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getEnd())
+            {
+                angle = ANGLE_UP;
+            }
+            else
+            {
+                angle = ANGLE_DOWN;
+            }
+        }
+        else // street is top-down
+        {
+            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getBeginning() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getBeginning())
+            {
+                angle = ANGLE_UP;
+            }
+            else
+            {
+                angle = ANGLE_DOWN;
+            }
+        }
+    }
+    else if (dy == 0.0) // horizontal street
+    {
+        if (dx > 0.0) // street is right-left
+        {
+            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getEnd() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getEnd())
+            {
+                angle = ANGLE_LEFT;
+            }
+            else
+            {
+                angle = ANGLE_RIGHT;
+            }
+        }
+        else // street is left-right
+        {
+            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getBeginning() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getBeginning())
+            {
+                angle = ANGLE_LEFT;
+            }
+            else
+            {
+                angle = ANGLE_RIGHT;
+            }
+        }
+    }
+    else // diagonal street
+    {
+        this->angle = qAtan(qAbs(dy) / qAbs(dx));
+    }
 }
 
