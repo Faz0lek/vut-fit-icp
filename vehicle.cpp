@@ -75,6 +75,9 @@ QRectF Vehicle::boundingRect() const
 
 void Vehicle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    (void)option;
+    (void)widget;
+
     QRectF r = this->boundingRect();
     QBrush b(Qt::blue);
 
@@ -85,6 +88,8 @@ void Vehicle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 void Vehicle::move(int phase)
 {
     if (!phase) return;
+
+    qDebug() << "I LIKE TO MOVE IT MOVE IT";
 
     QPointF location = this->pos();
     setPos(mapToParent(0, -(speed)));
