@@ -54,9 +54,16 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="setTimeButton">
+       <widget class="QLabel" name="speedLabel">
         <property name="text">
-         <string>Set Time</string>
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="setSpeedButton">
+        <property name="text">
+         <string>Set Speed</string>
         </property>
        </widget>
       </item>
