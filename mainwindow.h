@@ -48,5 +48,8 @@ private:
     void drawMap(const QVector<Street>& map);
     void initStops();
     void drawStops();
+
+    constexpr static int DEFAULT_SPEED = 1000;
+    int multiplier;
 };
 #endif // MAINWINDOW_H

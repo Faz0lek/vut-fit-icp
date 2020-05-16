@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->zoomSlider->hide();
 
+    this->multiplier = 1;
+
     p = FileParser();
 
     clock = new QTimer(this);
@@ -30,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->initScene();
 
-    clock->start(1000);
+    clock->start(DEFAULT_SPEED * multiplier);
 }
 
 MainWindow::~MainWindow()
