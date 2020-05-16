@@ -12,6 +12,8 @@
 #include <QFileDialog>
 #include <QTimer>
 #include <QtMath>
+#include <QInputDialog>
+#include <QMessageBox>
 #include "vehicle.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -21,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->zoomSlider->hide();
 
-    this->multiplier = 1;
+    this->timeout_multiplier = 50;
 
     p = FileParser();
 
@@ -29,10 +31,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(clock, &QTimer::timeout, this, &MainWindow::onClockTick);
 
     time = QTime(6, 0);
+    ui->timeLabel->setText(this->time.toString("hh:mm"));
+    ui->speedLabel->setText((QString)"Speed: " + QString::number(this->timeout_multiplier));
 
     this->initScene();
-
-    clock->start(DEFAULT_SPEED * multiplier);
 }
 
 MainWindow::~MainWindow()
@@ -88,9 +90,45 @@ void MainWindow::on_loadButton_clicked()
         return;
     }
 
+    this->clock->stop();
+
     this->lines = p.ParseLine(linesFileName, &this->map);
     this->stops = p.getStops();
     this->drawStops();
+
+    bool ok;
+    QMessageBox err_box;
+    QMessageBox warning_box;
+    err_box.setText("Invalid time format.");
+    warning_box.setText("Time not set. Default value 6:00 will be used.");
+    QString text_time;
+    QTime time_time;
+    while (true)
+    {
+        ok = false;
+        text_time = QInputDialog::getText(this, tr("Set time of simulation"), tr("Time: "), QLineEdit::Normal, tr("(e.g. 17:45, 06:02, 11:00, ...)"), &ok);
+        if (ok == true)
+        {
+            time_time = QTime::fromString(text_time, "hh:mm");
+            if (time_time.toString("hh:mm") != text_time)
+            {
+                err_box.exec();
+                continue;
+            }
+
+            this->time = time_time;
+            this->clock->start(DEFAULT_SPEED * (100 - timeout_multiplier));
+            break;
+        }
+        else
+        {
+            warning_box.exec();
+
+            this->time = QTime(6, 0);
+            this->clock->start(DEFAULT_SPEED * (100 - timeout_multiplier));
+            break;
+        }
+    }
 }
 
 void MainWindow::on_zoomSlider_valueChanged(int value)
@@ -122,4 +160,38 @@ void MainWindow::onClockTick()
     }
 }
 
-void MainWindow::on_setTimeButton_clicked() {}
+void MainWindow::on_setSpeedButton_clicked()
+{
+    bool ok;
+    QMessageBox err_box;
+    err_box.setText("Invalid speed format. Enter integer in range <1,99>");
+    QString text_speed;
+    int speed_speed;
+    while (true)
+    {
+        ok = false;
+        text_speed = QInputDialog::getText(this, tr("Set speed of simulation"), tr("Integer in range <1,99>:"), QLineEdit::Normal, tr("(e.g. 1, 23, 97, ...)"), &ok);
+        if (ok == true)
+        {
+            ok = false;
+            speed_speed = text_speed.toInt(&ok, 10);
+            if (!ok || speed_speed > 99 || speed_speed < 1)
+            {
+                err_box.exec();
+                continue;
+            }
+
+
+            this->timeout_multiplier = speed_speed;
+            ui->speedLabel->setText((QString)"Speed: " + QString::number(this->timeout_multiplier));
+            if (this->clock->isActive())
+                this->clock->start(DEFAULT_SPEED * (100 - timeout_multiplier));
+
+            break;
+        }
+        else
+        {
+            break;
+        }
+    }
+}

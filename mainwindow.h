@@ -29,7 +29,7 @@ private slots:
     void on_zoomSlider_valueChanged(int value);
     void onClockTick();
 
-    void on_setTimeButton_clicked();
+    void on_setSpeedButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -49,7 +49,7 @@ private:
     void initStops();
     void drawStops();
 
-    constexpr static int DEFAULT_SPEED = 1000;
-    int multiplier;
+    constexpr static int DEFAULT_SPEED = 20;
+    int timeout_multiplier;
 };
 #endif // MAINWINDOW_H
