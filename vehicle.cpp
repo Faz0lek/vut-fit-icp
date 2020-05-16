@@ -12,7 +12,7 @@ Vehicle::Vehicle(BusLine const& r, size_t index) :
         route.append(QPair<const Stop* const, QTime>(s.first, s.second[index]));
     }
 
-    points = schedule.getPoints();
+    this->points = schedule.getPoints();
 
     // set stops
     this->prevStop = route[0].first;
@@ -21,17 +21,21 @@ Vehicle::Vehicle(BusLine const& r, size_t index) :
     // set street
     this->currentStreet = route[0].first->getStreet();
 
+    // set destination
+    this->destination = &points[1];
+
     // set rotation
-    angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x())) + 90;
+    this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x())) + 90;
     setRotation(angle);
 
     // set start position
     setPos(points.first().x(), points.first().y());
 
     // set speed
-    speed = QLineF(points[0], points[1]).length() / getTimeDiff(route[0].second, route[1].second);
+    this->speed = QLineF(points[0], points[1]).length() / getTimeDiff(route[0].second, route[1].second);
 
-    index = 1;
+    this->pointIndex = 1;
+    this->stopIndex = 0;
 }
 
 const Street *Vehicle::getCurrentStreet() const
@@ -76,6 +80,37 @@ void Vehicle::advance(int phase)
     if (!phase) return;
 
     setPos(mapToParent(0, -(speed)));
+
+    qreal tmp = speed * 0.5;
+    QRectF dRect = QRectF(destination->x() - tmp, destination->y() - tmp, speed + 1, speed + 1);
+
+    if (dRect.contains(this->pos()))
+    {
+        if (*destination == points.last())
+        {
+            //destroy autobus
+            qDebug() << "DESTROYING BUS BRRRRRR";
+            return;
+        }
+
+        if (*destination == nextStop->getCoordinates())
+        {
+            qDebug() << "NEXT STOP REACHED";
+            prevStop = nextStop;
+            nextStop = route[stopIndex + 1].first;
+            this->speed = QLineF(points[pointIndex - 1], points[pointIndex]).length() / getTimeDiff(route[stopIndex].second, route[stopIndex + 1].second);
+            stopIndex++;
+        }
+
+        currentStreet = nextStop->getStreet();
+
+        pointIndex++;
+        destination = &points[pointIndex];
+
+        this->angle = qRadiansToDegrees(atan2(points[pointIndex].y() - points[pointIndex - 1].y(), points[pointIndex].x() - points[pointIndex - 1].x())) + 90;
+        setRotation(angle);
+        setPos(points[pointIndex - 1].x(), points[pointIndex - 1].y());
+    }
 }
 
 int Vehicle::getTimeDiff(const QTime first, const QTime second) const

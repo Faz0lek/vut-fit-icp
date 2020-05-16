@@ -36,6 +36,10 @@ private:
     QVector<QPair<const Stop* const, QTime>> route;
     QVector<QPointF> points;
 
+    QPointF* destination;
+    int pointIndex;
+    int stopIndex;
+
     qreal angle;
     qreal speed;
 
