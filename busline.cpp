@@ -11,16 +11,17 @@
 
 #include "busline.h"
 
-BusLine::BusLine(QVector<QPair<const Stop* const, QVector<QTime>>> routes)
+BusLine::BusLine(QVector<QPair<const Stop *const, QVector<QTime>>> routes)
     : routes(routes)
 {
     calculatePoints();
 }
 
 BusLine::BusLine()
-{}
+{
+}
 
-QVector<QPair<const Stop * const, QVector<QTime> > > BusLine::getRoutes() const
+QVector<QPair<const Stop *const, QVector<QTime>>> BusLine::getRoutes() const
 {
     return this->routes;
 }

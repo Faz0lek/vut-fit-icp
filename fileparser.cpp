@@ -46,7 +46,7 @@ QVector<Street> FileParser::ParseStreet(const QString street_filename)
     bool ok = true;
 
     QTextStream text(&file);
-    while (text.readLineInto(&tmp_line))
+    while (text.readLineInto(&tmp_line)) //iterate through all lines
     {
         str_list = tmp_line.split(',', QString::SkipEmptyParts);
         if (str_list.length() != 5)
@@ -113,7 +113,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
     bool ok = true;
 
     QTextStream text(&file);
-    while (text.readLineInto(&tmp_line))
+    while (text.readLineInto(&tmp_line)) //iterate through all lines
     {
         line_list = tmp_line.split(",,", QString::SkipEmptyParts);
         if (line_list.length() < 3)
@@ -123,7 +123,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
             return QMap<int, BusLine>();
         }
 
-        for (int i = 1; i < line_list.length(); i++)
+        for (int i = 1; i < line_list.length(); i++) //iterate through all subsections of lines
         {
             str_list = line_list.at(i).split(",", QString::SkipEmptyParts);
             if (str_list.length() < 12)
@@ -133,7 +133,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
                 return QMap<int, BusLine>();
             }
 
-            for (int j = 2; j < str_list.length(); j++)
+            for (int j = 2; j < str_list.length(); j++) //iterate through all times
             {
                 tmp_times.append(QTime::fromString(str_list.at(j), "hh:mm"));
                 if (tmp_times.last().toString("hh:mm") != str_list.at(j))
@@ -144,8 +144,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
                 }
             }
 
-
-            for (int j = 0; j < streets_value.length(); j++)
+            for (int j = 0; j < streets_value.length(); j++) //iterate through all streets recieved from argument
             {
                 if (streets_value[j].getName() == str_list.at(0))
                 {
@@ -157,7 +156,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
                         this->unique_stops.append(tmp_stop);
                     }
 
-                    for (int k = 0; k < unique_stops.length(); k++)
+                    for (int k = 0; k < unique_stops.length(); k++) //iterate through non-duplicate stops
                     {
                         if (!(this->unique_stops[k]->getStreet()->getName() == tmp_stop->getStreet()->getName() && this->unique_stops[k]->getDistance() == tmp_stop->getDistance()))
                         {
@@ -199,7 +198,7 @@ QMap<int, BusLine> FileParser::ParseLine(const QString line_filename, QVector<St
     return bus_lines;
 }
 
-QVector<Stop*> FileParser::getStops() const
+QVector<Stop *> FileParser::getStops() const
 {
     return this->unique_stops;
 }

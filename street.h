@@ -28,10 +28,10 @@ public:
      * @brief Construct a new Street object
      * 
      * @param street_name Name of the street
-     * @param x1 x1
-     * @param y1 y1
-     * @param x2 x2
-     * @param y2 y2
+     * @param x1 X coordinate of the first point
+     * @param y1 Y coordinate of the first point
+     * @param x2 X coordinate of the second point
+     * @param y2 Y coordinate of the second point
      */
     Street(const QString street_name, const int x1, const int y1, const int x2, const int y2);
 

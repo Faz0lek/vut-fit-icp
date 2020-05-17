@@ -62,8 +62,19 @@ public:
      * @return const BusLine& Returns the schedule
      */
     const BusLine &getRoute() const;
+
+    /*!
+     * @brief Get the time when vehicle started
+     * 
+     * @return const QTime Time to be returned
+     */
     const QTime getStartedAt();
 
+    /*!
+     * @brief Set the time when vehicle started
+     * 
+     * @param time Time to be set
+     */
     void setStartedAt(QTime time);
 
     /**
