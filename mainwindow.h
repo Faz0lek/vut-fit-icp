@@ -49,7 +49,9 @@ private:
     void initStops();
     void drawStops();
 
-    constexpr static int DEFAULT_SPEED = 20;
-    int timeout_multiplier;
+    bool draw_complete;
+
+    constexpr static int DEFAULT_SPEED = 1000;
+    double timeout_multiplier;
 };
 #endif // MAINWINDOW_H
