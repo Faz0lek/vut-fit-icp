@@ -17,12 +17,10 @@
 #include "vehicle.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->zoomSlider->hide();
-    ui->routeInfoLabel->hide();
 
     this->draw_complete = false;
     this->timeout_multiplier = 1;
@@ -32,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     time = QTime(6, 0);
     ui->timeLabel->setText(this->time.toString("hh:mm"));
-    ui->speedLabel->setText((QString)"Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
+    ui->speedLabel->setText((QString) "Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
     this->initScene();
 }
 
@@ -43,25 +41,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::initScene()
 {
-    auto* scene = new MainScene(ui->graphicsView);
+    auto *scene = new QGraphicsScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     connect(clock, SIGNAL(timeout()), scene, SLOT(advance()));
 }
 
-void MainWindow::drawMap(const QVector<Street>& map)
+void MainWindow::drawMap(const QVector<Street> &map)
 {
     for (auto s : map)
     {
         auto line = ui->graphicsView->scene()->addLine(s.getBeginning().x(), s.getBeginning().y(), s.getEnd().x(), s.getEnd().y());
         line->setPen(QPen({Qt::darkGray}, 7));
-//        line->setFlag(QGraphicsItem::ItemIsSelectable);
+        line->setFlag(QGraphicsItem::ItemIsSelectable);
     }
 }
 
 void MainWindow::drawStops()
 {
-    for (const auto& stop : this->stops)
+    for (const auto &stop : this->stops)
     {
         QPointF p = stop->getCoordinates();
 
@@ -81,7 +79,6 @@ void MainWindow::on_loadButton_clicked()
     this->map = p.ParseStreet(mapFileName);
     this->drawMap(this->map);
     ui->zoomSlider->show();
-
 
     const QString linesFileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
     if (linesFileName.isNull())
@@ -152,14 +149,14 @@ void MainWindow::onClockTick()
     this->time = this->time.addSecs(60);
     ui->timeLabel->setText(this->time.toString("HH:mm"));
 
-    for (const auto& line : this->lines)
+    for (const auto &line : this->lines)
     {
         size_t i = 0;
-        for (const auto& t : line.getRoutes()[0].second)
+        for (const auto &t : line.getRoutes()[0].second)
         {
             if (t.hour() == this->time.hour() && t.minute() == this->time.minute())
             {
-                Vehicle* v = new Vehicle(line, i);
+                Vehicle *v = new Vehicle(line, i);
                 this->buses.append(v);
                 ui->graphicsView->scene()->addItem(v);
                 break;
@@ -191,7 +188,7 @@ void MainWindow::on_setSpeedButton_clicked()
             }
 
             this->timeout_multiplier = double_speed;
-            ui->speedLabel->setText((QString)"Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
+            ui->speedLabel->setText((QString) "Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
 
             if (this->timeout_multiplier != 0.0)
             {
