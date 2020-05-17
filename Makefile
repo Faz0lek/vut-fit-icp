@@ -17,7 +17,7 @@ doxygen:
 	doxygen ./doc/Doxyfile
 	
 clean:
-	rm -frv ./doc/!(Doxyfile) ./src/!(*.cpp|*.h|$(NAME).pro|mainwindow.ui)
+	rm -frv ./doc/latex ./doc/html ./src/bin
 
 
 pack: clean default clean
