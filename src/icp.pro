@@ -1,3 +1,4 @@
+% Authors: Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -38,6 +39,6 @@ FORMS += \
     mainwindow.ui
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
+qnx: target.path = ./bin/
+else: unix:!android: target.path = ./bin/
 !isEmpty(target.path): INSTALLS += target
