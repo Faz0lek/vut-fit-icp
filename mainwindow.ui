@@ -86,6 +86,13 @@
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QLabel" name="routeInfoLabel">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
