@@ -24,7 +24,10 @@
 #include "fileparser.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+    class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -48,17 +51,19 @@ private:
     FileParser p;
 
     QVector<Street> map;
-    QVector<Stop*> stops;
+    QVector<Stop *> stops;
     QMap<int, BusLine> lines;
-    QList<Vehicle*> buses;
+    QList<Vehicle *> buses;
 
-    QTimer* clock;
+    QTimer *clock;
     QTime time;
 
     void initScene();
-    void drawMap(const QVector<Street>& map);
+    void drawMap(const QVector<Street> &map);
     void initStops();
     void drawStops();
+
+    bool draw_complete;
 
     constexpr static int DEFAULT_SPEED = 1000;
     qreal timeout_multiplier;
