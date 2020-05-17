@@ -17,8 +17,8 @@ doxygen:
 	doxygen ./doc/Doxyfile
 	
 clean:
-	rm -frv ./doc/latex ./doc/html ./src/bin
+	rm -frv ./doc/latex ./doc/html ./src/*.o ./src/$(NAME) ./src/Makefile ./src/moc_* ./src/ui_* ./src/.qmake.stash ./*.zip
 
 
-pack: clean default clean
+pack: default clean
 	zip -9rv $(ZIPFILE) src examples doc README.txt Makefile

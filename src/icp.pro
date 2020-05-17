@@ -1,4 +1,3 @@
-% Authors: Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
