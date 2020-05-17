@@ -52,7 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initScene()
 {
-    auto *scene = new QGraphicsScene(ui->graphicsView);
+    auto *scene = new MainScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     connect(clock, SIGNAL(timeout()), scene, SLOT(advance()));
@@ -60,6 +60,8 @@ void MainWindow::initScene()
 
 void MainWindow::drawMap(const QVector<Street> &map)
 {
+    ui->graphicsView->scene()->clear();
+
     for (auto s : map)
     {
         auto line = ui->graphicsView->scene()->addLine(s.getBeginning().x(), s.getBeginning().y(), s.getEnd().x(), s.getEnd().y());
@@ -166,6 +168,8 @@ void MainWindow::onClockTick()
             if (t.hour() == this->time.hour() && t.minute() == this->time.minute())
             {
                 Vehicle *v = new Vehicle(line, i);
+                v->setStartedAt(this->time);
+
                 this->buses.append(v);
                 ui->graphicsView->scene()->addItem(v);
                 break;

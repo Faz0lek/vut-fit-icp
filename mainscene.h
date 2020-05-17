@@ -7,6 +7,7 @@
 #include <QVector>
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
+#include <QMessageBox>
 
 class MainScene : public QGraphicsScene
 {

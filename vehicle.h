@@ -61,6 +61,9 @@ public:
      * @return const BusLine& Returns the schedule
      */
     const BusLine& getRoute() const;
+    const QTime getStartedAt();
+
+    void setStartedAt(QTime time);
 
     /**
      * @brief Width of the bus sprite
@@ -100,6 +103,8 @@ private:
 
     qreal angle;
     qreal speed;
+
+    QTime started_at;
 
     int getTimeDiff(const QTime first, const QTime second) const;
     qreal calculateDistance() const;
