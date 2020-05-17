@@ -2,18 +2,20 @@
 #include <QtDebug>
 #include <QtMath>
 
-
-Vehicle::Vehicle(BusLine const& r, size_t index, qreal a, qreal s) :
+Vehicle::Vehicle(BusLine const& r, size_t index) :
       currentStreet(nullptr),
-      schedule(r),
-      angle(a),
-      speed(s)
+      schedule(r)
 {
     // fill route
     for (const auto& s : r.getRoutes())
     {
         route.append(QPair<const Stop* const, QTime>(s.first, s.second[index]));
     }
+
+    this->points = schedule.getPoints();
+
+    this->nextPointIndex = 1;
+    this->nextStopIndex = 1;
 
     // set stops
     this->prevStop = route[0].first;
@@ -22,16 +24,24 @@ Vehicle::Vehicle(BusLine const& r, size_t index, qreal a, qreal s) :
     // set street
     this->currentStreet = route[0].first->getStreet();
 
-    // set rotation
-    setAngle();
-    setRotation(angle);
+    // set destination
+    this->destination = &points[1];
 
     // set start position
-    const QPointF p = route[0].first->getCoordinates();
-    setPos(p.x() - 1.0, p.y() - 1.0);
+    setPos(points.first().x() + 8, points.first().y() + 8);
+    qDebug() << points.first() << this->pos();
+
+    this->setTransformOriginPoint(8, 8);
+
+    // set rotation
+    this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x())) + 90;
+    setRotation(angle);
+
+    this->setTransformOriginPoint(0, 0);
 
     // set speed
-    setSpeed();
+    //this->speed = QLineF(points[0], points[1]).length() / getTimeDiff(route[0].second, route[1].second);
+    this->speed = calculateDistance() / getTimeDiff(route[0].second, route[1].second);
 }
 
 const Street *Vehicle::getCurrentStreet() const
@@ -75,223 +85,89 @@ void Vehicle::advance(int phase)
 {
     if (!phase) return;
 
-    qDebug() << "MOVE IT MOVE IT";
-
-    QPointF location = this->pos();
-    (void)location;
     setPos(mapToParent(0, -(speed)));
-}
 
-void Vehicle::setAngle()
-{
-    if (this->nextStop == Q_NULLPTR) return;
+    qreal tmp = speed * 0.5;
+    QRectF dRect = QRectF(destination->x() - 20, destination->y() - 20, 40, 40);
 
-    const qreal dx = this->currentStreet->getBeginning().x() - this->currentStreet->getEnd().x();
-    const qreal dy = this->currentStreet->getBeginning().y() - this->currentStreet->getEnd().y();
-
-    if (dx == 0.0) // vertical street
+    if (dRect.contains(this->pos()))
     {
+        if (*destination == points.last())
+        {
+            //destroy autobus
+            qDebug() << "DESTROYING BUS BRRRRRR";
+            this->hide();
+            delete this;
+            return;
+        }
 
-        if (dy > 0.0) // street is bottom-up
+        if (*destination == nextStop->getCoordinates())
         {
-            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getEnd() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getEnd())
-            {
-                angle = ANGLE_UP;
-            }
-            else
-            {
-                angle = ANGLE_DOWN;
-            }
+            qDebug() << "NEXT STOP REACHED";
+            nextStopIndex++;
+
+            prevStop = nextStop;
+            nextStop = route[nextStopIndex].first;
+            //this->speed = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length() / getTimeDiff(route[nextStopIndex].second, route[nextStopIndex + 1].second);
+            this->speed = calculateDistance() / getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second);
         }
-        else // street is top-down
-        {
-            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getBeginning() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getBeginning())
-            {
-                angle = ANGLE_UP;
-            }
-            else
-            {
-                angle = ANGLE_DOWN;
-            }
-        }
-    }
-    else if (dy == 0.0) // horizontal street
-    {
-        if (dx > 0.0) // street is right-left
-        {
-            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getEnd() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getEnd())
-            {
-                angle = ANGLE_LEFT;
-            }
-            else
-            {
-                angle = ANGLE_RIGHT;
-            }
-        }
-        else // street is left-right
-        {
-            if (nextStop->getStreet()->getBeginning() == prevStop->getStreet()->getBeginning() || nextStop->getStreet()->getEnd() == prevStop->getStreet()->getBeginning())
-            {
-                angle = ANGLE_LEFT;
-            }
-            else
-            {
-                angle = ANGLE_RIGHT;
-            }
-        }
-    }
-    else // diagonal street
-    {
-        this->angle = qAtan(qAbs(dy) / qAbs(dx)) - 90.0;
+
+        currentStreet = nextStop->getStreet();
+
+        nextPointIndex++;
+
+        destination = &points[nextPointIndex];
+
+        this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x())) + 90;
+        setTransformOriginPoint(8, 8);
+        setRotation(angle);
+        setTransformOriginPoint(0, 0);
+
+        setPos(points[nextPointIndex - 1].x() + 8, points[nextPointIndex - 1].y() + 8);
     }
 }
 
-void Vehicle::setSpeed()
+int Vehicle::getTimeDiff(const QTime first, const QTime second) const
 {
-    if (this->nextStop == Q_NULLPTR) return;
-
-    const qreal dx = this->currentStreet->getBeginning().x() - this->currentStreet->getEnd().x();
-    const qreal dy = this->currentStreet->getBeginning().y() - this->currentStreet->getEnd().y();
-
-    QPoint endingPoint;
-    qreal distance = 0.0;
-
-    int dt = 0;
-    int i = 0;
-    for (const auto& s : this->route)
+    if (first.hour() == second.hour())
     {
-        if (s.first == this->prevStop)
+        return second.minute() - first.minute();
+    }
+    else
+    {
+        if (first.hour() > second.hour())
         {
-            if (route[i + 1].second.hour() == s.second.hour())
-            {
-                dt = route[i + 1].second.minute() - s.second.minute();
-            }
-            else
-            {
-                dt = (route[i + 1].second.hour() - s.second.hour()) * 60 - s.second.minute() + 60;
-            }
+            return 60 * (24 - first.hour() + second.hour()) - first.minute() + second.minute();
+        }
+        else
+        {
+            return 60 * (second.hour() - first.hour()) - first.minute() + second.minute();
+        }
+    }
+}
+
+qreal Vehicle::calculateDistance() const
+{
+    qreal d = 0.0;
+    bool isStop = false;
+
+    d = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length();
+
+    for (const auto& p : route)
+    {
+        if (*destination == p.first->getCoordinates())
+        {
+            isStop = true;
             break;
         }
-        i++;
     }
 
-    // next stop is on the same street
-    if (this->currentStreet == nextStop->getStreet())
+    if (isStop)
     {
-        distance = qSqrt(qPow(qAbs(this->x() - nextStop->getCoordinates().x()), 2.0) + qPow(qAbs(this->y() - nextStop->getCoordinates().y()), 2.0));
-
-        speed = distance / dt;
-        qDebug() << distance << dt;
-        return;
+        return d;
     }
-
-    // find end of current street
-    if (dx == 0.0) // vertical street
+    else
     {
-        if (dy > 0.0) // street is bottom-up
-        {
-            if (angle == ANGLE_UP)
-            {
-                endingPoint = prevStop->getStreet()->getEnd();
-            }
-            else if (angle == ANGLE_DOWN)
-            {
-                endingPoint = prevStop->getStreet()->getBeginning();
-            }
-        }
-        else // street is top-down
-        {
-            if (angle == ANGLE_UP)
-            {
-                endingPoint = prevStop->getStreet()->getBeginning();
-            }
-            else if (angle == ANGLE_DOWN)
-            {
-                endingPoint = prevStop->getStreet()->getEnd();
-            }
-        }
+        return d + QLineF(points[nextPointIndex], points[nextPointIndex + 1]).length();
     }
-    else if (dy == 0.0) // horizontal street
-    {
-        if (dx > 0.0) // street is right-left
-        {
-            if (angle == ANGLE_RIGHT)
-            {
-                endingPoint = prevStop->getStreet()->getBeginning();
-            }
-            else if (angle == ANGLE_LEFT)
-            {
-                endingPoint = prevStop->getStreet()->getEnd();
-            }
-        }
-        else // street is left-right
-        {
-            if (angle == ANGLE_RIGHT)
-            {
-                endingPoint = prevStop->getStreet()->getEnd();
-            }
-            else if (angle == ANGLE_LEFT)
-            {
-                endingPoint = prevStop->getStreet()->getBeginning();
-            }
-        }
-    }
-    else // diagonal street
-    {
-        if (dx > 0.0)
-        {
-            if (dy > 0.0) //++
-            {
-                if (angle > ANGLE_RIGHT && angle < ANGLE_DOWN)
-                {
-                    endingPoint = prevStop->getStreet()->getBeginning();
-                }
-                else if (angle > ANGLE_LEFT)
-                {
-                    endingPoint = prevStop->getStreet()->getEnd();
-                }
-            }
-            else //+-
-            {
-                if (angle > ANGLE_UP && angle < ANGLE_RIGHT)
-                {
-                    endingPoint = prevStop->getStreet()->getBeginning();
-                }
-                else if (angle > ANGLE_DOWN && angle < ANGLE_LEFT)
-                {
-                    endingPoint = prevStop->getStreet()->getEnd();
-                }
-            }
-        }
-        else // dx < 0.0
-        {
-            if (dy > 0.0) //-+
-            {
-                if (angle > ANGLE_UP && angle < ANGLE_RIGHT)
-                {
-                    endingPoint = prevStop->getStreet()->getEnd();
-                }
-                else if (angle > ANGLE_DOWN && angle < ANGLE_LEFT)
-                {
-                    endingPoint = prevStop->getStreet()->getBeginning();
-                }
-            }
-            else //--
-            {
-                if (angle > ANGLE_RIGHT && angle < ANGLE_DOWN)
-                {
-                    endingPoint = prevStop->getStreet()->getEnd();
-                }
-                else if (angle > ANGLE_LEFT)
-                {
-                    endingPoint = prevStop->getStreet()->getBeginning();
-                }
-            }
-        }
-    }
-
-    distance = qSqrt(qPow(qAbs(this->x() - endingPoint.x()), 2) + qPow(qAbs(this->y() - endingPoint.y()), 2)) + qSqrt(qPow(qAbs(endingPoint.x() - nextStop->getCoordinates().x()), 2) + qPow(qAbs(endingPoint.y() - nextStop->getCoordinates().y()), 2));
-    speed = distance / dt;
-    qDebug() << distance << dt;
 }
-

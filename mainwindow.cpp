@@ -63,7 +63,7 @@ void MainWindow::drawStops()
     {
         QPointF p = stop->getCoordinates();
 
-        auto e = ui->graphicsView->scene()->addEllipse(p.x(), p.y(), stop->WIDTH, stop->HEIGHT);
+        auto e = ui->graphicsView->scene()->addEllipse(p.x() - (Stop::WIDTH * 0.5), p.y() - (Stop::HEIGHT * 0.5), stop->WIDTH, stop->HEIGHT);
         e->setBrush(QBrush(Qt::red));
     }
 }
@@ -125,7 +125,6 @@ void MainWindow::on_loadButton_clicked()
         else
         {
             warning_box.exec();
-
             this->time = QTime(6, 0);
             ui->timeLabel->setText(this->time.toString("hh:mm"));
 

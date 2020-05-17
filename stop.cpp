@@ -33,8 +33,8 @@ QPointF Stop::getCoordinates() const
     dx = this->street->getBeginning().x() - this->street->getEnd().x();
     dy = this->street->getBeginning().y() - this->street->getEnd().y();
 
-    x = this->street->getBeginning().x() - (WIDTH * 0.5);
-    y = this->street->getBeginning().y() - (HEIGHT * 0.5);
+    x = this->street->getBeginning().x();
+    y = this->street->getBeginning().y();
 
     const qreal streetLen = this->street->getLength() * 0.01;
 

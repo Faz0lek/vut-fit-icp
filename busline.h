@@ -15,8 +15,13 @@ public:
 
     QVector<QPair<const Stop* const, QVector<QTime>>> getRoutes() const;
 
+    QVector<QPointF> getPoints() const;
+
 private:
     QVector<QPair<const Stop* const, QVector<QTime>>> routes;
+
+    void calculatePoints();
+    QVector<QPointF> points;
 };
 
 #endif // BUSLINE_H
