@@ -106,7 +106,6 @@ void Vehicle::advance(int phase)
 
     setPos(mapToParent(0, -(speed)));
 
-    qreal tmp = speed * 0.5;
     QRectF dRect = QRectF(destination->x() - 20, destination->y() - 20, 40, 40);
 
     if (dRect.contains(this->pos()))
