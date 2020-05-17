@@ -55,6 +55,6 @@ private:
     bool draw_complete;
 
     constexpr static int DEFAULT_SPEED = 1000;
-    double timeout_multiplier;
+    qreal timeout_multiplier;
 };
 #endif // MAINWINDOW_H
