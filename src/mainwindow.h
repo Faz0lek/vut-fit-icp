@@ -40,7 +40,7 @@ namespace Ui
 }
 QT_END_NAMESPACE
 
-/*!
+/**
  * @brief Class describing MainWindow. Used to operate on main application window.
  * 
  */
@@ -49,13 +49,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    /*!
+    /**
      * @brief Construct a new Main Window object
      * 
      * @param parent 
      */
     MainWindow(QWidget *parent = nullptr);
-    /*!
+    /**
      * @brief Destroy the Main Window object
      * 
      */

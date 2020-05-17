@@ -28,11 +28,11 @@ class Vehicle : public QGraphicsItem
 {
 public:
     /**
- * @brief Construct a new Vehicle object
- * 
- * @param r Schedule
- * @param index index
- */
+     * @brief Construct a new Vehicle object
+     * 
+     * @param r Schedule
+     * @param index index
+     */
     Vehicle(BusLine const &r, size_t index);
 
     /**
@@ -63,14 +63,14 @@ public:
      */
     const BusLine &getRoute() const;
 
-    /*!
+    /**
      * @brief Get the time when vehicle started
      * 
      * @return const QTime Time to be returned
      */
     const QTime getStartedAt();
 
-    /*!
+    /**
      * @brief Set the time when vehicle started
      * 
      * @param time Time to be set

@@ -20,7 +20,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-/*!
+/**
  * @brief Class describing MainScene. Behaves like QGraphicsScene, except mousePressEvent was redifined.
  * 
  */
@@ -28,7 +28,7 @@ class MainScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    /*!
+    /**
      * @brief Construct a new Main Scene object.
      * 
      * @param parent 
@@ -36,7 +36,7 @@ public:
     explicit MainScene(QObject *parent = nullptr);
 
 protected:
-    /*!
+    /**
      * @brief Captures mouse press event.
      * 
      * @param event 
