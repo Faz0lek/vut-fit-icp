@@ -43,5 +43,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    README.txt \
     linesfile.csv \
     streetsfile.csv
