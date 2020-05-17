@@ -1,3 +1,14 @@
+/**
+ * @file mainwindow.cpp
+ * @author Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
+ * @brief Mainwindow source file. This file implements the behaviour of main window.
+ * @version 1.0
+ * @date 2020-05-17
+ *
+ * @copyright Copyright (c) 2020
+ *
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mainscene.h"

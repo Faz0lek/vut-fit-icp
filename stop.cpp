@@ -1,3 +1,14 @@
+/**
+ * @file stop.cpp
+ * @author Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
+ * @brief Stop source file. This file implements Stop behaviour.
+ * @version 1.0
+ * @date 2020-05-17
+ *
+ * @copyright Copyright (c) 2020
+ *
+ */
+
 #include "stop.h"
 #include <QtMath>
 #include <QtDebug>

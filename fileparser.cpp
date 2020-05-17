@@ -1,9 +1,9 @@
 /**
  * @file fileparser.cpp
- * @author Adam Gajda (xgajda07@stud.fit.vutbr.cz)
+ * @author Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
  * @brief Implementation of parser which parses files into desired data structures.
- * @version 0.1
- * @date 2020-05-11
+ * @version 1.0
+ * @date 2020-05-17
  *
  * @copyright Copyright (c) 2020
  *

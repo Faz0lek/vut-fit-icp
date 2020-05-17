@@ -1,3 +1,14 @@
+/**
+ * @file vehicle.cpp
+ * @author Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
+ * @brief Vehicle source file. This file implements all bus behaviour.
+ * @version 1.0
+ * @date 2020-05-17
+ *
+ * @copyright Copyright (c) 2020
+ *
+ */
+
 #include "vehicle.h"
 #include <QtDebug>
 #include <QtMath>

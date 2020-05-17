@@ -1,5 +1,15 @@
-#include "street.h"
+/**
+ * @file street.cpp
+ * @author Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
+ * @brief Street source file. This file implements the Street behaviour.
+ * @version 1.0
+ * @date 2020-05-17
+ *
+ * @copyright Copyright (c) 2020
+ *
+ */
 
+#include "street.h"
 #include <QtMath>
 
 Street::Street(const QString street_name, const int x1, const int y1, const int x2, const int y2)

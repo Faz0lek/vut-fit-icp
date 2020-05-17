@@ -1,3 +1,14 @@
+/**
+ * @file mainwindow.h
+ * @author Martin Kostelník (xkoste12), Adam Gajda (xgajda07)
+ * @brief Mainwindow header file.
+ * @version 1.0
+ * @date 2020-05-17
+ *
+ * @copyright Copyright (c) 2020
+ *
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
