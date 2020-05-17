@@ -32,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->zoomSlider->hide();
-    ui->routeInfoLabel->hide();
 
     this->draw_complete = false;
     this->timeout_multiplier = 1;
@@ -53,7 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initScene()
 {
-    auto *scene = new MainScene(ui->graphicsView);
+    auto *scene = new QGraphicsScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     connect(clock, SIGNAL(timeout()), scene, SLOT(advance()));
@@ -65,7 +64,6 @@ void MainWindow::drawMap(const QVector<Street> &map)
     {
         auto line = ui->graphicsView->scene()->addLine(s.getBeginning().x(), s.getBeginning().y(), s.getEnd().x(), s.getEnd().y());
         line->setPen(QPen({Qt::darkGray}, 7));
-        //        line->setFlag(QGraphicsItem::ItemIsSelectable);
     }
 }
 
