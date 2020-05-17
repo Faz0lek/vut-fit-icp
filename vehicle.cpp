@@ -29,7 +29,6 @@ Vehicle::Vehicle(BusLine const& r, size_t index) :
 
     // set start position
     setPos(points.first().x() + 8, points.first().y() + 8);
-    qDebug() << points.first() << this->pos();
 
     this->setTransformOriginPoint(8, 8);
 
@@ -40,7 +39,6 @@ Vehicle::Vehicle(BusLine const& r, size_t index) :
     this->setTransformOriginPoint(0, 0);
 
     // set speed
-    //this->speed = QLineF(points[0], points[1]).length() / getTimeDiff(route[0].second, route[1].second);
     this->speed = calculateDistance() / getTimeDiff(route[0].second, route[1].second);
 }
 
@@ -62,6 +60,16 @@ const Stop* Vehicle::getNextStop() const
 const BusLine& Vehicle::getRoute() const
 {
     return this->schedule;
+}
+
+void Vehicle::setStartedAt(QTime time)
+{
+    this->started_at = time;
+}
+
+const QTime Vehicle::getStartedAt()
+{
+    return this->started_at;
 }
 
 QRectF Vehicle::boundingRect() const
@@ -95,7 +103,6 @@ void Vehicle::advance(int phase)
         if (*destination == points.last())
         {
             //destroy autobus
-            qDebug() << "DESTROYING BUS BRRRRRR";
             this->hide();
             delete this;
             return;
@@ -103,12 +110,10 @@ void Vehicle::advance(int phase)
 
         if (*destination == nextStop->getCoordinates())
         {
-            qDebug() << "NEXT STOP REACHED";
             nextStopIndex++;
 
             prevStop = nextStop;
             nextStop = route[nextStopIndex].first;
-            //this->speed = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length() / getTimeDiff(route[nextStopIndex].second, route[nextStopIndex + 1].second);
             this->speed = calculateDistance() / getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second);
         }
 

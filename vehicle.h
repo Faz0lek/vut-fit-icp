@@ -17,6 +17,9 @@ public:
     const Stop* getPrevStop() const;
     const Stop* getNextStop() const;
     const BusLine& getRoute() const;
+    const QTime getStartedAt();
+
+    void setStartedAt(QTime time);
 
     constexpr static qreal WIDTH = 16.0;
     constexpr static qreal HEIGHT = 16.0;
@@ -42,6 +45,8 @@ private:
 
     qreal angle;
     qreal speed;
+
+    QTime started_at;
 
     int getTimeDiff(const QTime first, const QTime second) const;
     qreal calculateDistance() const;
