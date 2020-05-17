@@ -10,17 +10,14 @@
  */
 
 #include "vehicle.h"
-#include <QtDebug>
-#include <QtMath>
 
-Vehicle::Vehicle(BusLine const& r, size_t index) :
-      currentStreet(nullptr),
-      schedule(r)
+Vehicle::Vehicle(BusLine const &r, size_t index) : currentStreet(nullptr),
+                                                   schedule(r)
 {
     // fill route
-    for (const auto& s : r.getRoutes())
+    for (const auto &s : r.getRoutes())
     {
-        route.append(QPair<const Stop* const, QTime>(s.first, s.second[index]));
+        route.append(QPair<const Stop *const, QTime>(s.first, s.second[index]));
     }
 
     this->points = schedule.getPoints();
@@ -63,12 +60,12 @@ const Stop *Vehicle::getPrevStop() const
     return this->prevStop;
 }
 
-const Stop* Vehicle::getNextStop() const
+const Stop *Vehicle::getNextStop() const
 {
     return this->nextStop;
 }
 
-const BusLine& Vehicle::getRoute() const
+const BusLine &Vehicle::getRoute() const
 {
     return this->schedule;
 }
@@ -102,7 +99,8 @@ void Vehicle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 
 void Vehicle::advance(int phase)
 {
-    if (!phase) return;
+    if (!phase)
+        return;
 
     setPos(mapToParent(0, -(speed)));
 
@@ -168,7 +166,7 @@ qreal Vehicle::calculateDistance() const
 
     d = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length();
 
-    for (const auto& p : route)
+    for (const auto &p : route)
     {
         if (*destination == p.first->getCoordinates())
         {

@@ -15,6 +15,7 @@
 #include <QPoint>
 #include <QString>
 #include <QPair>
+#include <QtMath>
 
 /**
  * @brief Class describing Streets. Streets are used in the map.

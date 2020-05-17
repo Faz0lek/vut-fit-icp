@@ -10,20 +10,18 @@
  */
 
 #include "stop.h"
-#include <QtMath>
-#include <QtDebug>
 
-Stop::Stop(const Street * const street, const int distance)
-    : street(street)
-    , distance(distance)
-{}
+Stop::Stop(const Street *const street, const int distance)
+    : street(street), distance(distance)
+{
+}
 
 Stop::Stop()
-    : street(nullptr)
-    , distance(-1)
-{}
+    : street(nullptr), distance(-1)
+{
+}
 
-const Street* Stop::getStreet() const
+const Street *Stop::getStreet() const
 {
     return this->street;
 }

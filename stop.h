@@ -13,8 +13,9 @@
 #define STOP_H
 
 #include "street.h"
-
 #include <QString>
+#include <QtMath>
+#include <QtDebug>
 
 /**
  * @brief Class desribing stops. Stops are used in the map and buses use them as anchor points.
@@ -29,7 +30,7 @@ public:
      * @param street Street on which the stop lies
      * @param distance Distance as percentage from Street beginning
      */
-    Stop(const Street * const street, const int distance);
+    Stop(const Street *const street, const int distance);
 
     /**
      * @brief Default constructor
@@ -42,7 +43,7 @@ public:
      * 
      * @return const Street* Returns the street the stop lies on
      */
-    const Street* getStreet() const;
+    const Street *getStreet() const;
 
     /**
      * @brief Get the Distance object
@@ -71,7 +72,7 @@ public:
     constexpr static qreal HEIGHT = 14.0;
 
 private:
-    const Street * const street;
+    const Street *const street;
     const int distance;
 };
 

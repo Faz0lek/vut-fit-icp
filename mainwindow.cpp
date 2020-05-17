@@ -11,21 +11,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "mainscene.h"
-#include <QGraphicsView>
-#include "street.h"
-#include "busline.h"
-#include "fileparser.h"
-#include <QVector>
-#include <QString>
-#include <QGraphicsLineItem>
-#include <QDebug>
-#include <QFileDialog>
-#include <QTimer>
-#include <QtMath>
-#include <QInputDialog>
-#include <QMessageBox>
-#include "vehicle.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)

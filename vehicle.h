@@ -14,10 +14,11 @@
 
 #include "street.h"
 #include "busline.h"
-
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
+#include <QtDebug>
+#include <QtMath>
 
 /**
  * @brief Class describing buses. Buses are created when a time matches a spawn time and they are destroyed when they reach their final stop.
@@ -26,41 +27,41 @@
 class Vehicle : public QGraphicsItem
 {
 public:
-/**
+    /**
  * @brief Construct a new Vehicle object
  * 
  * @param r Schedule
  * @param index index
  */
-    Vehicle(BusLine const& r, size_t index);
+    Vehicle(BusLine const &r, size_t index);
 
     /**
      * @brief Get the Current Street the bus drives
      * 
      * @return const Street* Returns a pointer to the street
      */
-    const Street* getCurrentStreet() const;
+    const Street *getCurrentStreet() const;
 
     /**
      * @brief Get the previous Stop the bus stopped at
      * 
      * @return const Stop* Returns a pointer to the previous Stop
      */
-    const Stop* getPrevStop() const;
+    const Stop *getPrevStop() const;
 
     /**
      * @brief Get the next Stop the bus will stop at
      * 
      * @return const Stop* Returns a pointer to the next Stop
      */
-    const Stop* getNextStop() const;
+    const Stop *getNextStop() const;
 
     /**
      * @brief Get the Schedule of a bus
      * 
      * @return const BusLine& Returns the schedule
      */
-    const BusLine& getRoute() const;
+    const BusLine &getRoute() const;
     const QTime getStartedAt();
 
     void setStartedAt(QTime time);
@@ -89,15 +90,15 @@ protected:
     virtual void advance(int phase) override;
 
 private:
-    const Street* currentStreet;
-    const Stop* prevStop;
-    const Stop* nextStop;
+    const Street *currentStreet;
+    const Stop *prevStop;
+    const Stop *nextStop;
 
-    BusLine const& schedule;
-    QVector<QPair<const Stop* const, QTime>> route;
+    BusLine const &schedule;
+    QVector<QPair<const Stop *const, QTime>> route;
     QVector<QPointF> points;
 
-    QPointF* destination;
+    QPointF *destination;
     int nextPointIndex;
     int nextStopIndex;
 

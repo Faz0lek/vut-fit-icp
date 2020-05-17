@@ -22,6 +22,16 @@
 #include "stop.h"
 #include "vehicle.h"
 #include "fileparser.h"
+#include <QApplication>
+#include "mainscene.h"
+#include <QGraphicsView>
+#include <QString>
+#include <QGraphicsLineItem>
+#include <QDebug>
+#include <QFileDialog>
+#include <QtMath>
+#include <QInputDialog>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
