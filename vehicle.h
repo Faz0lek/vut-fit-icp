@@ -37,13 +37,14 @@ private:
     QVector<QPointF> points;
 
     QPointF* destination;
-    int pointIndex;
-    int stopIndex;
+    int nextPointIndex;
+    int nextStopIndex;
 
     qreal angle;
     qreal speed;
 
     int getTimeDiff(const QTime first, const QTime second) const;
+    qreal calculateDistance() const;
 };
 
 #endif // VEHICLE_H

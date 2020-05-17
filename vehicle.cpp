@@ -14,6 +14,9 @@ Vehicle::Vehicle(BusLine const& r, size_t index) :
 
     this->points = schedule.getPoints();
 
+    this->nextPointIndex = 1;
+    this->nextStopIndex = 1;
+
     // set stops
     this->prevStop = route[0].first;
     this->nextStop = route[1].first;
@@ -24,18 +27,16 @@ Vehicle::Vehicle(BusLine const& r, size_t index) :
     // set destination
     this->destination = &points[1];
 
+    // set start position
+    setPos(points.first().x(), points.first().y());
+
     // set rotation
     this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x())) + 90;
     setRotation(angle);
 
-    // set start position
-    setPos(points.first().x(), points.first().y());
-
     // set speed
-    this->speed = QLineF(points[0], points[1]).length() / getTimeDiff(route[0].second, route[1].second);
-
-    this->pointIndex = 1;
-    this->stopIndex = 0;
+    //this->speed = QLineF(points[0], points[1]).length() / getTimeDiff(route[0].second, route[1].second);
+    this->speed = calculateDistance() / getTimeDiff(route[0].second, route[1].second);
 }
 
 const Street *Vehicle::getCurrentStreet() const
@@ -90,26 +91,32 @@ void Vehicle::advance(int phase)
         {
             //destroy autobus
             qDebug() << "DESTROYING BUS BRRRRRR";
+            this->hide();
+            delete this;
             return;
         }
 
         if (*destination == nextStop->getCoordinates())
         {
             qDebug() << "NEXT STOP REACHED";
+            nextStopIndex++;
+
             prevStop = nextStop;
-            nextStop = route[stopIndex + 1].first;
-            this->speed = QLineF(points[pointIndex - 1], points[pointIndex]).length() / getTimeDiff(route[stopIndex].second, route[stopIndex + 1].second);
-            stopIndex++;
+            nextStop = route[nextStopIndex].first;
+            //this->speed = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length() / getTimeDiff(route[nextStopIndex].second, route[nextStopIndex + 1].second);
+            this->speed = calculateDistance() / getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second);
         }
 
         currentStreet = nextStop->getStreet();
 
-        pointIndex++;
-        destination = &points[pointIndex];
+        nextPointIndex++;
 
-        this->angle = qRadiansToDegrees(atan2(points[pointIndex].y() - points[pointIndex - 1].y(), points[pointIndex].x() - points[pointIndex - 1].x())) + 90;
+        destination = &points[nextPointIndex];
+
+        this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x())) + 90;
         setRotation(angle);
-        setPos(points[pointIndex - 1].x(), points[pointIndex - 1].y());
+
+        setPos(points[nextPointIndex - 1].x(), points[nextPointIndex - 1].y());
     }
 }
 
@@ -129,5 +136,31 @@ int Vehicle::getTimeDiff(const QTime first, const QTime second) const
         {
             return 60 * (second.hour() - first.hour()) - first.minute() + second.minute();
         }
+    }
+}
+
+qreal Vehicle::calculateDistance() const
+{
+    qreal d = 0.0;
+    bool isStop = false;
+
+    d = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length();
+
+    for (const auto& p : route)
+    {
+        if (*destination == p.first->getCoordinates())
+        {
+            isStop = true;
+            break;
+        }
+    }
+
+    if (isStop)
+    {
+        return d;
+    }
+    else
+    {
+        return d + QLineF(points[nextPointIndex], points[nextPointIndex + 1]).length();
     }
 }
