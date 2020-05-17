@@ -28,11 +28,16 @@ Vehicle::Vehicle(BusLine const& r, size_t index) :
     this->destination = &points[1];
 
     // set start position
-    setPos(points.first().x(), points.first().y());
+    setPos(points.first().x() + 8, points.first().y() + 8);
+    qDebug() << points.first() << this->pos();
+
+    this->setTransformOriginPoint(8, 8);
 
     // set rotation
     this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x())) + 90;
     setRotation(angle);
+
+    this->setTransformOriginPoint(0, 0);
 
     // set speed
     //this->speed = QLineF(points[0], points[1]).length() / getTimeDiff(route[0].second, route[1].second);
@@ -83,7 +88,7 @@ void Vehicle::advance(int phase)
     setPos(mapToParent(0, -(speed)));
 
     qreal tmp = speed * 0.5;
-    QRectF dRect = QRectF(destination->x() - tmp, destination->y() - tmp, speed + 1, speed + 1);
+    QRectF dRect = QRectF(destination->x() - 20, destination->y() - 20, 40, 40);
 
     if (dRect.contains(this->pos()))
     {
@@ -114,9 +119,11 @@ void Vehicle::advance(int phase)
         destination = &points[nextPointIndex];
 
         this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x())) + 90;
+        setTransformOriginPoint(8, 8);
         setRotation(angle);
+        setTransformOriginPoint(0, 0);
 
-        setPos(points[nextPointIndex - 1].x(), points[nextPointIndex - 1].y());
+        setPos(points[nextPointIndex - 1].x() + 8, points[nextPointIndex - 1].y() + 8);
     }
 }
 
