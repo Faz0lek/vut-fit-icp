@@ -135,7 +135,6 @@ void MainWindow::on_loadButton_clicked()
         else
         {
             warning_box.exec();
-
             this->time = QTime(6, 0);
             ui->timeLabel->setText(this->time.toString("hh:mm"));
 
