@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     time = QTime(6, 0);
     ui->timeLabel->setText(this->time.toString("hh:mm"));
-    ui->speedLabel->setText((QString) "(Time stops at 0) Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
+    ui->speedLabel->setText((QString) "Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
     this->initScene();
 }
 
@@ -186,7 +186,7 @@ void MainWindow::on_setSpeedButton_clicked()
             }
 
             this->timeout_multiplier = double_speed;
-            ui->speedLabel->setText((QString) "(Time stops at 0) Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
+            ui->speedLabel->setText((QString) "Speed: " + QString::number(this->timeout_multiplier, 'f', 2));
 
             if (this->timeout_multiplier != 0.0)
             {
