@@ -10,6 +10,7 @@
  */
 
 #include "vehicle.h"
+#include <QDebug>
 
 Vehicle::Vehicle(BusLine const &r, size_t index) : currentStreet(nullptr),
                                                    schedule(r)
@@ -35,16 +36,15 @@ Vehicle::Vehicle(BusLine const &r, size_t index) : currentStreet(nullptr),
     // set destination
     this->destination = &points[1];
 
-    // set start position
-    setPos(points.first().x() + 8, points.first().y() + 8);
+    // calculate angle
+    this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x()));
 
-    this->setTransformOriginPoint(8, 8);
+    // set start position relative to the rotation
+    const qreal LEN = qSqrt(512) / 2;
+    setPos(points.first().x() - (LEN * qCos(qDegreesToRadians(angle + 45))), points.first().y() - (LEN * qSin(qDegreesToRadians(angle + 45))));
 
-    // set rotation
-    this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x())) + 90;
+    //set rotation
     setRotation(angle);
-
-    this->setTransformOriginPoint(0, 0);
 
     // set speed
     this->speed = calculateDistance() / getTimeDiff(route[0].second, route[1].second);
@@ -102,10 +102,10 @@ void Vehicle::advance(int phase)
     if (!phase)
         return;
 
-    setPos(mapToParent(0, -(speed)));
+    setPos(mapToParent(speed, 0.0));
 
+    const qreal LEN = qSqrt(512) / 2;
     QRectF dRect = QRectF(destination->x() - 20, destination->y() - 20, 40, 40);
-
     if (dRect.contains(this->pos()))
     {
         if (*destination == points.last())
@@ -130,13 +130,12 @@ void Vehicle::advance(int phase)
         nextPointIndex++;
 
         destination = &points[nextPointIndex];
+        this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x()));
 
-        this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x())) + 90;
-        setTransformOriginPoint(8, 8);
+        // set start position relative to the rotation
+        setPos(points[nextPointIndex - 1].x() - (LEN * qCos(qDegreesToRadians(angle + 45))), points[nextPointIndex - 1].y() - (LEN * qSin(qDegreesToRadians(angle + 45))));
+
         setRotation(angle);
-        setTransformOriginPoint(0, 0);
-
-        setPos(points[nextPointIndex - 1].x() + 8, points[nextPointIndex - 1].y() + 8);
     }
 }
 
