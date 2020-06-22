@@ -7,10 +7,10 @@ default:
 	qmake -o ./src/Makefile ./src/$(NAME).pro
 	$(MAKE) -C src
 	
-run:
+run: default
 	./src/$(NAME)
 	
-run-win:
+run-win: default
 	./src/$(NAME).exe
 	
 doxygen:
@@ -20,5 +20,5 @@ clean:
 	rm -frv ./doc/latex ./doc/html ./src/*.o ./src/$(NAME) ./src/Makefile ./src/moc_* ./src/ui_* ./src/.qmake.stash ./*.zip
 
 
-pack: default clean
+pack: clean
 	zip -9rv $(ZIPFILE) src examples doc README.txt Makefile
