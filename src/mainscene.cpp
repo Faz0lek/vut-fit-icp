@@ -78,6 +78,8 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
             QMessageBox schedule_box;
             schedule_box.setTextFormat(Qt::RichText);
+            schedule_box.setWindowTitle("Schedule");
+            schedule_box.setStyleSheet("QLabel{min-width: 700px;}");
             schedule_box.setText(schedule_text);
             schedule_box.exec();
 
