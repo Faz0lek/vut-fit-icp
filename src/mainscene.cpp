@@ -10,6 +10,10 @@
  */
 
 #include "mainscene.h"
+#include <QLabel>
+#include <QWidget>
+#include <QHBoxLayout>
+#include <QDialog>
 
 MainScene::MainScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -76,12 +80,13 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 i++;
             }
 
-            QMessageBox schedule_box;
-            schedule_box.setTextFormat(Qt::RichText);
-            schedule_box.setWindowTitle("Schedule");
-            schedule_box.setStyleSheet("QLabel{min-width: 700px;}");
-            schedule_box.setText(schedule_text);
-            schedule_box.exec();
+            QDialog* r = new QDialog();
+            QLabel* l = new QLabel(schedule_text);
+            QHBoxLayout* layout = new QHBoxLayout();
+            layout->addWidget(l);
+            r->setLayout(layout);
+            r->setModal(true);
+            r->show();
 
             //reverse state of all stops
             for (auto pair_stop_times : vehicle->getRoute().getRoutes()) //iterate over all pairs of stop&times
