@@ -106,7 +106,7 @@ void MainWindow::on_loadButton_clicked()
     while (true)
     {
         ok = false;
-        text_time = QInputDialog::getText(this, tr("Set time of simulation"), tr("Time: "), QLineEdit::Normal, tr("(e.g. 17:45, 06:02, 11:00, ...)"), &ok);
+        text_time = QInputDialog::getText(this, tr("Set time of simulation"), tr("Time: "), QLineEdit::Normal, tr("(e.g. 17:45, 6:02, 11:00, ...)"), &ok);
         if (ok == true)
         {
             qtime_time = QTime::fromString(text_time, "h:mm");
