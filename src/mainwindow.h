@@ -67,6 +67,7 @@ private slots:
     void onClockTick();
 
     void on_setSpeedButton_clicked();
+    void on_ppButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -90,5 +91,6 @@ private:
 
     constexpr static int DEFAULT_SPEED = 1000;
     qreal timeout_multiplier;
+    bool paused;
 };
 #endif // MAINWINDOW_H

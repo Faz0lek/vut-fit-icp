@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->zoomSlider->hide();
+    ui->zoomLabel->hide();
+    ui->ppButton->hide();
+    ui->speedLabel->hide();
+    this->paused = false;
 
     this->draw_complete = false;
     this->timeout_multiplier = 1;
@@ -76,6 +80,7 @@ void MainWindow::on_loadButton_clicked()
     this->map = p.ParseStreet(mapFileName);
     this->drawMap(this->map);
     ui->zoomSlider->show();
+    ui->zoomLabel->show();
 
     const QString linesFileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
     if (linesFileName.isNull())
@@ -104,8 +109,8 @@ void MainWindow::on_loadButton_clicked()
         text_time = QInputDialog::getText(this, tr("Set time of simulation"), tr("Time: "), QLineEdit::Normal, tr("(e.g. 17:45, 06:02, 11:00, ...)"), &ok);
         if (ok == true)
         {
-            qtime_time = QTime::fromString(text_time, "hh:mm");
-            if (qtime_time.toString("hh:mm") != text_time)
+            qtime_time = QTime::fromString(text_time, "h:mm");
+            if (qtime_time.toString("h:mm") != text_time)
             {
                 err_box.exec();
                 continue;
@@ -117,6 +122,10 @@ void MainWindow::on_loadButton_clicked()
             if (this->timeout_multiplier != 0.0)
                 this->clock->start(DEFAULT_SPEED / timeout_multiplier);
 
+            ui->loadButton->hide();
+            ui->ppButton->show();
+            ui->speedLabel->show();
+
             break;
         }
         else
@@ -127,6 +136,10 @@ void MainWindow::on_loadButton_clicked()
 
             if (this->timeout_multiplier != 0.0)
                 this->clock->start(DEFAULT_SPEED / this->timeout_multiplier);
+
+            ui->loadButton->hide();
+            ui->ppButton->show();
+            ui->speedLabel->show();
 
             break;
         }
@@ -168,13 +181,13 @@ void MainWindow::on_setSpeedButton_clicked()
 {
     bool ok;
     QMessageBox err_box;
-    err_box.setText("Invalid speed format. Enter double in range <0,100>");
+    err_box.setText("Invalid speed format. Enter a number from 0 to 100.");
     QString text_speed;
     double double_speed;
     while (true)
     {
         ok = false;
-        text_speed = QInputDialog::getText(this, tr("Set speed of simulation"), tr("Double in range <0,100>:"), QLineEdit::Normal, tr("(e.g. 0.5, 23, 96.66, ...)"), &ok);
+        text_speed = QInputDialog::getText(this, tr("Set speed"), tr("From 0 to 100"), QLineEdit::Normal, tr("(e.g. 0.5, 23, 96.66, ...)"), &ok);
         if (ok == true)
         {
             ok = false;
@@ -204,5 +217,21 @@ void MainWindow::on_setSpeedButton_clicked()
         {
             break;
         }
+    }
+}
+
+void MainWindow::on_ppButton_clicked()
+{
+    if (paused)
+    {
+        paused = false;
+        ui->ppButton->setText("Pause");
+        this->clock->start(DEFAULT_SPEED / this->timeout_multiplier);
+    }
+    else
+    {
+        paused = true;
+        ui->ppButton->setText("Play");
+        this->clock->stop();
     }
 }

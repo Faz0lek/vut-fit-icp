@@ -41,6 +41,18 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="zoomLabel">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Zoom</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -61,9 +73,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="ppButton">
+        <property name="text">
+         <string>Pause</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="setSpeedButton">
         <property name="text">
-         <string>Set Speed</string>
+         <string>Speed</string>
         </property>
        </widget>
       </item>
