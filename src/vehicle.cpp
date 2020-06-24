@@ -30,6 +30,9 @@ Vehicle::Vehicle(BusLine const &r, size_t index) : currentStreet(nullptr),
     this->prevStop = route[0].first;
     this->nextStop = route[1].first;
 
+    this->prevStopTime = route[0].second;
+    this->nextStopTime = route[1].second;
+
     // set street
     this->currentStreet = route[0].first->getStreet();
 
@@ -63,6 +66,16 @@ const Stop *Vehicle::getPrevStop() const
 const Stop *Vehicle::getNextStop() const
 {
     return this->nextStop;
+}
+
+const QTime Vehicle::getPrevStopTime()
+{
+    return this->prevStopTime;
+}
+
+const QTime Vehicle::getNextStopTime()
+{
+    return this->nextStopTime;
 }
 
 const BusLine &Vehicle::getRoute() const
@@ -122,6 +135,8 @@ void Vehicle::advance(int phase)
 
             prevStop = nextStop;
             nextStop = route[nextStopIndex].first;
+            prevStopTime = nextStopTime;
+            nextStopTime = route[nextStopIndex].second;
             this->speed = calculateDistance() / getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second);
         }
 

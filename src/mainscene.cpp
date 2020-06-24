@@ -10,10 +10,7 @@
  */
 
 #include "mainscene.h"
-#include <QLabel>
-#include <QWidget>
-#include <QHBoxLayout>
-#include <QDialog>
+
 
 MainScene::MainScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -22,6 +19,20 @@ MainScene::MainScene(QObject *parent)
 
 void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (this->dialog_shown == true)
+    {
+        for (auto *item : MainScene::items())
+        {
+            auto *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item);
+            if (ellipse != nullptr)
+            {
+                ellipse->setBrush(QBrush(Qt::red));
+            }
+        }
+
+        this->dialog_shown = false;
+    }
+
     for (auto *item : items(event->scenePos())) //iterate through all items on a position where a vehicle could be located
     {
         auto *vehicle = dynamic_cast<Vehicle *>(item);
@@ -29,6 +40,8 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         { //item is a vehicle
             QString schedule_text = "";
             QPair<const Stop *const, QVector<QTime>> pair = vehicle->getRoute().getRoutes()[0];
+
+            schedule_text += "Previous stop: " + vehicle->getPrevStopTime().toString("hh:mm, ") + "Next stop: " + vehicle->getNextStopTime().toString("hh:mm<br>");
 
             bool time_index_found = false;
             int time_index;
@@ -68,6 +81,8 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                     }
                 }
 
+                this->dialog_shown = true;
+
                 schedule_text += "Stop " + QString::number(i) + " on " + pair_stop_times.first->getStreet()->getName() + ":"; //make text for schedule_box
                 for (int j = 0; j < pair_stop_times.second.length(); j++)
                 {
@@ -81,27 +96,14 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             }
 
             QDialog* r = new QDialog();
+            r->setAttribute(Qt::WA_DeleteOnClose);
+            r->setWindowTitle(QString("Schedule"));
             QLabel* l = new QLabel(schedule_text);
             QHBoxLayout* layout = new QHBoxLayout();
             layout->addWidget(l);
             r->setLayout(layout);
             r->setModal(true);
             r->show();
-
-            //reverse state of all stops
-            for (auto pair_stop_times : vehicle->getRoute().getRoutes()) //iterate over all pairs of stop&times
-            {
-                for (auto *item2 : items(pair_stop_times.first->getCoordinates()))
-                {
-                    auto *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item2);
-                    if (ellipse != nullptr)
-                    { //item2 is an ellipse (stop)
-                        ellipse->setBrush(QBrush(Qt::red));
-
-                        break;
-                    }
-                }
-            }
 
             break;
         }
