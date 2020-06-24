@@ -10,6 +10,7 @@
  */
 
 #include "vehicle.h"
+#include <QDebug>
 
 Vehicle::Vehicle(BusLine const &r, size_t index) : currentStreet(nullptr),
                                                    schedule(r)
@@ -29,25 +30,27 @@ Vehicle::Vehicle(BusLine const &r, size_t index) : currentStreet(nullptr),
     this->prevStop = route[0].first;
     this->nextStop = route[1].first;
 
+    this->prevStopTime = route[0].second;
+    this->nextStopTime = route[1].second;
+
     // set street
     this->currentStreet = route[0].first->getStreet();
 
     // set destination
     this->destination = &points[1];
 
-    // set start position
-    setPos(points.first().x() + 8, points.first().y() + 8);
+    // calculate angle
+    this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x()));
 
-    this->setTransformOriginPoint(8, 8);
+    // set start position relative to the rotation
+    const qreal LEN = qSqrt(512) / 2;
+    setPos(points.first().x() - (LEN * qCos(qDegreesToRadians(angle + 45))), points.first().y() - (LEN * qSin(qDegreesToRadians(angle + 45))));
 
-    // set rotation
-    this->angle = qRadiansToDegrees(atan2(points[1].y() - points[0].y(), points[1].x() - points[0].x())) + 90;
+    //set rotation
     setRotation(angle);
 
-    this->setTransformOriginPoint(0, 0);
-
     // set speed
-    this->speed = calculateDistance() / getTimeDiff(route[0].second, route[1].second);
+    this->speed = calculateDistance() / (getTimeDiff(route[0].second, route[1].second) + 1);
 }
 
 const Street *Vehicle::getCurrentStreet() const
@@ -63,6 +66,16 @@ const Stop *Vehicle::getPrevStop() const
 const Stop *Vehicle::getNextStop() const
 {
     return this->nextStop;
+}
+
+const QTime Vehicle::getPrevStopTime()
+{
+    return this->prevStopTime;
+}
+
+const QTime Vehicle::getNextStopTime()
+{
+    return this->nextStopTime;
 }
 
 const BusLine &Vehicle::getRoute() const
@@ -102,10 +115,10 @@ void Vehicle::advance(int phase)
     if (!phase)
         return;
 
-    setPos(mapToParent(0, -(speed)));
+    setPos(mapToParent(speed, 0.0));
 
+    const qreal LEN = qSqrt(512) / 2;
     QRectF dRect = QRectF(destination->x() - 20, destination->y() - 20, 40, 40);
-
     if (dRect.contains(this->pos()))
     {
         if (*destination == points.last())
@@ -116,27 +129,29 @@ void Vehicle::advance(int phase)
             return;
         }
 
+        nextPointIndex++;
+
         if (*destination == nextStop->getCoordinates())
         {
             nextStopIndex++;
 
             prevStop = nextStop;
             nextStop = route[nextStopIndex].first;
-            this->speed = calculateDistance() / getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second);
+            prevStopTime = nextStopTime;
+            nextStopTime = route[nextStopIndex].second;
+
+            this->speed = calculateDistance() / (getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second) + 1);
         }
 
         currentStreet = nextStop->getStreet();
 
-        nextPointIndex++;
-
         destination = &points[nextPointIndex];
+        this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x()));
 
-        this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x())) + 90;
-        setTransformOriginPoint(8, 8);
+        // set start position relative to the rotation
+        setPos(points[nextPointIndex - 1].x() - (LEN * qCos(qDegreesToRadians(angle + 45))), points[nextPointIndex - 1].y() - (LEN * qSin(qDegreesToRadians(angle + 45))));
+
         setRotation(angle);
-        setTransformOriginPoint(0, 0);
-
-        setPos(points[nextPointIndex - 1].x() + 8, points[nextPointIndex - 1].y() + 8);
     }
 }
 
@@ -161,26 +176,10 @@ int Vehicle::getTimeDiff(const QTime first, const QTime second) const
 
 qreal Vehicle::calculateDistance() const
 {
-    qreal d = 0.0;
-    bool isStop = false;
-
-    d = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length();
-
-    for (const auto &p : route)
+    if (points[nextPointIndex] == nextStop->getCoordinates()) // is stop
     {
-        if (*destination == p.first->getCoordinates())
-        {
-            isStop = true;
-            break;
-        }
+        return QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length();
     }
 
-    if (isStop)
-    {
-        return d;
-    }
-    else
-    {
-        return d + QLineF(points[nextPointIndex], points[nextPointIndex + 1]).length();
-    }
+    return (QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length() + QLineF(points[nextPointIndex], points[nextPointIndex + 1]).length());
 }

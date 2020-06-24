@@ -57,6 +57,20 @@ public:
     const Stop *getNextStop() const;
 
     /**
+     * @brief Get the previous Stop time the bus stopped at
+     *
+     * @return const QTime Returns a time of the previous Stop
+     */
+    const QTime getPrevStopTime();
+
+    /**
+     * @brief Get the next Stop time the bus will stop at
+     *
+     * @return const QTime Returns a time of the next Stop
+     */
+    const QTime getNextStopTime();
+
+    /**
      * @brief Get the Schedule of a bus
      * 
      * @return const BusLine& Returns the schedule
@@ -104,6 +118,8 @@ private:
     const Street *currentStreet;
     const Stop *prevStop;
     const Stop *nextStop;
+    QTime prevStopTime;
+    QTime nextStopTime;
 
     BusLine const &schedule;
     QVector<QPair<const Stop *const, QTime>> route;

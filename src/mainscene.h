@@ -19,6 +19,11 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 #include <QMessageBox>
+#include <QEventLoop>
+#include <QLabel>
+#include <QWidget>
+#include <QHBoxLayout>
+#include <QDialog>
 
 /**
  * @brief Class describing MainScene. Behaves like QGraphicsScene, except mousePressEvent was redifined.
@@ -42,6 +47,10 @@ protected:
      * @param event 
      */
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+
+private:
+    bool dialog_shown = false;
 
 signals:
 };
