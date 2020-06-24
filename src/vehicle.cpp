@@ -50,7 +50,7 @@ Vehicle::Vehicle(BusLine const &r, size_t index) : currentStreet(nullptr),
     setRotation(angle);
 
     // set speed
-    this->speed = calculateDistance() / getTimeDiff(route[0].second, route[1].second);
+    this->speed = calculateDistance() / (getTimeDiff(route[0].second, route[1].second) + 1);
 }
 
 const Street *Vehicle::getCurrentStreet() const
@@ -129,6 +129,8 @@ void Vehicle::advance(int phase)
             return;
         }
 
+        nextPointIndex++;
+
         if (*destination == nextStop->getCoordinates())
         {
             nextStopIndex++;
@@ -137,12 +139,11 @@ void Vehicle::advance(int phase)
             nextStop = route[nextStopIndex].first;
             prevStopTime = nextStopTime;
             nextStopTime = route[nextStopIndex].second;
-            this->speed = calculateDistance() / getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second);
+
+            this->speed = calculateDistance() / (getTimeDiff(route[nextStopIndex - 1].second, route[nextStopIndex].second) + 1);
         }
 
         currentStreet = nextStop->getStreet();
-
-        nextPointIndex++;
 
         destination = &points[nextPointIndex];
         this->angle = qRadiansToDegrees(atan2(points[nextPointIndex].y() - points[nextPointIndex - 1].y(), points[nextPointIndex].x() - points[nextPointIndex - 1].x()));
@@ -175,26 +176,10 @@ int Vehicle::getTimeDiff(const QTime first, const QTime second) const
 
 qreal Vehicle::calculateDistance() const
 {
-    qreal d = 0.0;
-    bool isStop = false;
-
-    d = QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length();
-
-    for (const auto &p : route)
+    if (points[nextPointIndex] == nextStop->getCoordinates()) // is stop
     {
-        if (*destination == p.first->getCoordinates())
-        {
-            isStop = true;
-            break;
-        }
+        return QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length();
     }
 
-    if (isStop)
-    {
-        return d;
-    }
-    else
-    {
-        return d + QLineF(points[nextPointIndex], points[nextPointIndex + 1]).length();
-    }
+    return (QLineF(points[nextPointIndex - 1], points[nextPointIndex]).length() + QLineF(points[nextPointIndex], points[nextPointIndex + 1]).length());
 }
