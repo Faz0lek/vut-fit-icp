@@ -71,7 +71,7 @@ void MainWindow::drawStops()
 
 void MainWindow::on_loadButton_clicked()
 {
-    const QString mapFileName = QFileDialog::getOpenFileName(this, "Open map file", QDir::homePath());
+    const QString mapFileName = QFileDialog::getOpenFileName(this, "Open map", QDir::homePath());
     if (mapFileName.isNull())
     {
         return;
@@ -82,7 +82,7 @@ void MainWindow::on_loadButton_clicked()
     ui->zoomSlider->show();
     ui->zoomLabel->show();
 
-    const QString linesFileName = QFileDialog::getOpenFileName(this, "Open lines file", QDir::homePath());
+    const QString linesFileName = QFileDialog::getOpenFileName(this, "Open schedule", QDir::homePath());
     if (linesFileName.isNull())
     {
         return;

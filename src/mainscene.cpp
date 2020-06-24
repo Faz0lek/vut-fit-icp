@@ -41,7 +41,7 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             QString schedule_text = "";
             QPair<const Stop *const, QVector<QTime>> pair = vehicle->getRoute().getRoutes()[0];
 
-            schedule_text += "Previous stop: " + vehicle->getPrevStopTime().toString("hh:mm, ") + "Next stop: " + vehicle->getNextStopTime().toString("hh:mm<br>");
+            //schedule_text += "Previous stop: " + vehicle->getPrevStopTime().toString("hh:mm, ") + "Next stop: " + vehicle->getNextStopTime().toString("hh:mm<br>");
 
             bool time_index_found = false;
             int time_index;
@@ -103,6 +103,7 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             layout->addWidget(l);
             r->setLayout(layout);
             r->setModal(true);
+            r->setWindowTitle("Schedule");
             r->show();
 
             break;
